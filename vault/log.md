@@ -41,3 +41,6 @@
 - 2026-05-17T22:00:00+09:00 | [plugin] | cc-session | Claude Code plugin packaging: .claude-plugin/plugin.json manifest, /install 슬래시 명령 신설 | .claude-plugin/plugin.json .claude/commands/install.md
 - 2026-05-17T22:00:00+09:00 | [installer] | cc-session | scripts/install.sh 작성: 7 단계 (precheck/Obsidian/Dataview/Docker+Neo4j/.env/Slack/weekly-review), idempotent, --check 안전 모드, --step N 부분 실행 | scripts/install.sh
 - 2026-05-17T22:00:00+09:00 | [verify] | cc-session | install.sh --check 통과 (Docker daemon 만 미실행, 그 외 모두 OK) | -
+- 2026-05-17T22:30:00+09:00 | [marketplace] | cc-session | .claude-plugin/marketplace.json 신설, plugin.json 정정 (commands/skills 를 디렉터리 string 으로). 단일-plugin 마켓플레이스 패턴 | .claude-plugin/marketplace.json .claude-plugin/plugin.json
+- 2026-05-17T22:30:00+09:00 | [docs] | cc-session | PUBLISH.md 작성: GitHub repo 생성 → remote add → push → tag 절차, 사용자 측 /plugin marketplace add gaebalai/cc-llm-wiki 흐름 | docs-internal/PUBLISH.md README.md
+- 2026-05-17T22:30:00+09:00 | [verify] | cc-session | JSON 유효성 + 교차참조 검증 (commands 1건, skills 4건 자동 발견 가능) | -

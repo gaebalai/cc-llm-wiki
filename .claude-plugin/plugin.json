@@ -1,12 +1,16 @@
 {
   "name": "cc-llm-wiki",
   "version": "0.1.0",
-  "description": "Claude Code 중심의 로컬 전용 LLM Wiki — 3층 격리(raw/wiki/schema) + Neo4j GraphRAG + Obsidian. Karpathy LLM Wiki 원전부터 GraphRAG PoC까지 11개 설계 문서를 통합한 풀스택 환경.",
+  "description": "Claude Code 중심의 로컬 전용 LLM Wiki — 3층 격리(raw/wiki/schema) + Neo4j GraphRAG + Obsidian. Karpathy LLM Wiki 원전부터 GraphRAG PoC까지 통합한 풀스택 환경.",
   "author": {
-    "name": "jaewoo.kim2019",
-    "email": "jaewoo.kim2019@gmail.com"
+    "name": "Jaewoo Kim",
+    "email": "jaewoo@claudecode.to"
   },
-  "homepage": "https://github.com/jaewoo-kim/cc-llm-wiki",
+  "homepage": "https://github.com/gaebalai/cc-llm-wiki",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gaebalai/cc-llm-wiki.git"
+  },
   "license": "MIT",
   "keywords": [
     "obsidian",
@@ -15,17 +19,11 @@
     "knowledge-base",
     "personal-knowledge-management",
     "llm-wiki",
-    "karpathy"
+    "karpathy",
+    "context-engineering"
   ],
-  "commands": [
-    "commands/install.md"
-  ],
-  "skills": [
-    "skills/ingest/SKILL.md",
-    "skills/lint/SKILL.md",
-    "skills/compile/SKILL.md",
-    "skills/graph-sync/SKILL.md"
-  ],
+  "commands": ".claude/commands",
+  "skills": ".claude/skills",
   "requirements": {
     "platform": ["darwin", "linux"],
     "tools": {
@@ -36,8 +34,8 @@
     },
     "optional": {
       "neo4j-driver": "for graph-sync 실 동작 (pip install neo4j)",
-      "slack-webhook": "for daily-digest 알림"
+      "slack-webhook": "for daily-digest 알림 (없으면 dry-run)"
     }
   },
-  "notes": "본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다. Cloudflare Pages·다국어 publish 는 의도적으로 제외. 설치 후 `/install` 슬래시 명령으로 Obsidian/Dataview/Docker Neo4j/Slack 설정을 순차 진행하세요."
+  "notes": "본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다. Cloudflare Pages·다국어 publish 는 의도적으로 제외. 설치 후 `/install` 슬래시 명령으로 Obsidian/Dataview/Docker Neo4j/Slack 설정을 7 단계 대화형으로 진행하세요. settings.json 의 hooks(raw 보호 등) 는 plugin 활성 시 자동 로드되지 않으므로, 별도 프로젝트에서 사용 시 `/install` 이 사용자 .claude/settings.json 에 hooks 를 복사합니다(향후 작업)."
 }

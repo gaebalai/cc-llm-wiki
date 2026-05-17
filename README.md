@@ -96,5 +96,42 @@ bash scripts/install.sh
 
 ## Claude Code Plugin 으로 사용
 
-본 리포는 `.claude-plugin/plugin.json` 으로 plugin 메타데이터를 갖춥니다.
-다른 사람이 plugin marketplace 통해 설치하면 `/install` 명령으로 동일한 셋업 흐름이 자동 노출됩니다.
+본 리포는 **단일-plugin 마켓플레이스** 패턴입니다.
+루트의 `.claude-plugin/marketplace.json` (마켓플레이스 정의) + `.claude-plugin/plugin.json` (플러그인 정의)로 구성.
+
+### 다른 사람이 설치하는 법 (Claude Code 세션 안)
+
+```
+/plugin marketplace add gaebalai/cc-llm-wiki
+/plugin install cc-llm-wiki@cc-llm-wiki
+```
+
+- `gaebalai/cc-llm-wiki` = GitHub `<owner>/<repo>` 형식
+- `cc-llm-wiki@cc-llm-wiki` = `<plugin-name>@<marketplace-name>` (둘 다 같은 이름)
+
+설치되면 다음이 자동 활성화:
+
+| 컴포넌트 | 경로 | 자동 발견 |
+|---|---|---|
+| Commands | `.claude/commands/` | `/install` 1개 |
+| Skills | `.claude/skills/` | `ingest`·`lint`·`compile`·`graph-sync` 4개 |
+
+설치 후 즉시 `/install` 명령으로 7-단계 환경 셋업 진행.
+
+### 업데이트
+
+```
+/plugin update cc-llm-wiki@cc-llm-wiki
+```
+
+### plugin 개발자(저자) 가 새 버전 게시
+
+```bash
+# 1. 변경 후 plugin.json + marketplace.json 의 version 둘 다 bump (semver)
+# 2. 커밋 + tag
+git tag v0.2.0 -m "release: 0.2.0"
+git push origin main --tags
+# 3. 사용자가 /plugin update 로 받음
+```
+
+`version` 생략 시 git commit SHA 가 버전이지만, 명시적 semver 권장.
