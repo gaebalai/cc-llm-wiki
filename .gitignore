@@ -8,7 +8,8 @@
 # Obsidian local state
 vault/.obsidian/workspace*
 vault/.obsidian/cache
-vault/.obsidian/plugins/*/data.json
+# 플러그인 바이너리는 Obsidian 이 자동 다운로드. community-plugins.json 만 commit 해서 명세 유지
+vault/.obsidian/plugins/
 
 # OS / editor
 .DS_Store

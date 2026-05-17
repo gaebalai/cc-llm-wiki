@@ -53,3 +53,4 @@
 - 2026-05-18T00:00:00+09:00 | [release] | human-via-cc | GitHub Public repo 생성 + push origin main + tag v0.1.0 + Release 게시 | https://github.com/gaebalai/cc-llm-wiki | https://github.com/gaebalai/cc-llm-wiki/releases/tag/v0.1.0
 - 2026-05-18T00:00:00+09:00 | [verify] | cc-session | marketplace.json·plugin.json raw.githubusercontent.com 에서 fetch 확인. 사용자 측 /plugin marketplace add gaebalai/cc-llm-wiki 즉시 가능 | -
 - 2026-05-18T00:15:00+09:00 | [raw-rename] | human-via-cc | macos 숨겨진 폴더 raw 파일을 SCHEMA §3 슬러그 규칙에 맞게 리네임. ERROR 1→0 | "vault/01_raw/articles/macos 숨겨진 폴더 - Google 검색.md" -> "vault/01_raw/articles/2026-05-17-macos-show-hidden-folder.md"
+- 2026-05-18T00:25:00+09:00 | [obsidian] | human-via-cc | .gitignore 에 vault/.obsidian/plugins/ 추가 (바이너리 무시), community-plugins.json 만 commit (Dataview enable 명세 보존) — 표준 패턴 적용 | .gitignore vault/.obsidian/community-plugins.json
