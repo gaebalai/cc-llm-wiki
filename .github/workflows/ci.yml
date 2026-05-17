@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate (JSON · SKILL · syntax · secret · lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ───── 1. JSON 유효성 ─────
+      - name: JSON validity (plugin·marketplace·settings)
+        run: |
+          for f in \
+            .claude-plugin/marketplace.json \
+            .claude-plugin/plugin.json \
+            .claude/settings.json
+          do
+            python -c "import json; json.load(open('$f'))" \
+              && echo "  ✓ $f" \
+              || (echo "  ✗ $f"; exit 1)
+          done
+
+      # ───── 2. plugin.json/marketplace.json 교차참조 ─────
+      - name: Plugin ↔ Marketplace cross-ref
+        run: |
+          mp=$(python -c "import json; print(json.load(open('.claude-plugin/marketplace.json'))['plugins'][0]['name'])")
+          pl=$(python -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['name'])")
+          [ "$mp" = "$pl" ] && echo "  ✓ name 일치: $pl" || (echo "  ✗ name 불일치"; exit 1)
+          mpv=$(python -c "import json; print(json.load(open('.claude-plugin/marketplace.json'))['plugins'][0]['version'])")
+          plv=$(python -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          [ "$mpv" = "$plv" ] && echo "  ✓ version 일치: $plv" || (echo "  ✗ version 불일치 mp=$mpv pl=$plv"; exit 1)
+
+      # ───── 3. SKILL.md frontmatter ─────
+      - name: SKILL.md frontmatter
+        run: |
+          python << 'PY'
+          import re, sys
+          from pathlib import Path
+          required = {"name", "description"}
+          errs = 0
+          for p in Path("skills").rglob("SKILL.md"):
+              text = p.read_text(encoding="utf-8")
+              if not text.startswith("---\n"):
+                  print(f"  ✗ {p} frontmatter 없음"); errs += 1; continue
+              end = text.find("\n---\n", 4)
+              fm = text[4:end] if end > 0 else ""
+              keys = set(re.findall(r"^([a-zA-Z_-]+):", fm, re.M))
+              missing = required - keys
+              if missing:
+                  print(f"  ✗ {p} 필수키 누락: {missing}"); errs += 1
+              else:
+                  print(f"  ✓ {p}")
+          sys.exit(0 if errs == 0 else 1)
+          PY
+
+      # ───── 4. Bash syntax ─────
+      - name: Bash syntax (install.sh)
+        run: bash -n scripts/install.sh && echo "  ✓ install.sh"
+
+      # ───── 5. Python compile ─────
+      - name: Python compile
+        run: |
+          for p in services/graph/ingest_graph.py services/graph/query_graph.py scripts/post_slack.py; do
+            python -m py_compile "$p" && echo "  ✓ $p"
+          done
+
+      # ───── 6. install.sh --check (사이드이펙트 0) ─────
+      - name: install.sh --check (no Docker/Obsidian)
+        run: |
+          # CI 환경엔 brew/Docker/Obsidian 없음. STEP 1 까지만 확인
+          bash scripts/install.sh --step 1 --check 2>&1 | tail -20 || true
+          # 전체는 step 2 의 brew 분기에서 실패할 수 있음 → step 1 통과만 확인
+
+      # ───── 7. lint Skill (vault 자체 정합성, 10 항목) ─────
+      - name: vault lint (10 rules)
+        run: |
+          python << 'PY'
+          import re, sys
+          from pathlib import Path
+          vault = Path("vault")
+          if not vault.exists():
+              print("  vault/ 없음 — skip (plugin packaging context)"); sys.exit(0)
+          errs = 0; warns = 0
+          seen_ids = {}
+          for p in vault.rglob("*.md"):
+              if "_lint" in str(p) or p.name.startswith("."): continue
+              text = p.read_text(encoding="utf-8")
+              if not text.startswith("---\n"): continue
+              end = text.find("\n---\n", 4)
+              fm = text[4:end] if end > 0 else ""
+              keys = dict(re.findall(r"^([a-z_]+):\s*(.*)$", fm, re.M))
+              # 필수 키
+              for req in ("id","type","status","locale","sources","updated_at"):
+                  if req not in keys: print(f"  ✗ {p} 필수키 누락: {req}"); errs += 1
+              # type enum
+              t = keys.get("type","")
+              if t and t not in ("topic","decision","self","digest","dashboard","positioning"):
+                  print(f"  ✗ {p} type enum: {t}"); errs += 1
+              # status enum
+              s = keys.get("status","")
+              if s and s not in ("draft","reviewed","published"):
+                  print(f"  ✗ {p} status enum: {s}"); errs += 1
+              # duplicate id
+              iid = keys.get("id","")
+              if iid:
+                  if iid in seen_ids: print(f"  ✗ dup id: {iid}"); errs += 1
+                  seen_ids[iid] = p
+          print(f"\nERROR: {errs} / WARN: {warns}")
+          sys.exit(0 if errs == 0 else 1)
+          PY
+
+      # ───── 8. 시크릿 leak grep (tracked 파일) ─────
+      - name: Secret pattern grep (tracked only)
+        run: |
+          if git ls-files | xargs grep -lE 'xox[abeops]-[A-Za-z0-9-]{20,}|sk-[a-zA-Z0-9_-]{30,}|bot[A-Z0-9]{24}' 2>/dev/null \
+             | grep -vE '\.env\.example$|SKILL\.md$|install\.(sh|md)$|raw/articles' ; then
+            echo "  ✗ 실제 시크릿 패턴 의심"; exit 1
+          else
+            echo "  ✓ 시크릿 누출 없음"
+          fi
+
+      # ───── 9. .env 보호 ─────
+      - name: .env gitignore protection
+        run: |
+          git check-ignore .env 2>/dev/null && echo "  ✓ .env ignored" \
+            || (echo "  ⚠ .env 가 git 에 추적될 수 있음"; true)

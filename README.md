@@ -3,9 +3,10 @@
 > Karpathy 의 LLM Wiki 원전부터 Neo4j GraphRAG PoC 까지 11 개 설계 문서를 통합한
 > **Claude Code 중심 로컬 전용 LLM Wiki**.
 
+[![CI](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Plugin: Claude Code](https://img.shields.io/badge/Plugin-Claude_Code-blue)](https://github.com/gaebalai/cc-llm-wiki)
-[![Phase: P6](https://img.shields.io/badge/Phase-P6_complete-green)](#phase-로드맵)
+[![Version](https://img.shields.io/badge/version-0.3.7-green)](https://github.com/gaebalai/cc-llm-wiki/releases)
 
 ## 무엇
 

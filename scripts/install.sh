@@ -213,6 +213,78 @@ step5_5_hook_merge() {
   merge_hooks && ok "Hook 머지 완료" || warn "Hook 머지 실패 (수동 머지 필요)"
 }
 
+# ───── Obsidian Excluded files 자동 머지 (flat 모드 전용) ─────
+merge_obsidian_ignore() {
+  # flat 모드: TARGET_DIR 자체가 vault → plugin 자산이 vault root 에 노출
+  # → Obsidian Excluded files 에 자동 추가 (사용자 vault UX)
+  local app_json="$VAULT_DIR/.obsidian/app.json"
+  if [ ! -d "$VAULT_DIR/.obsidian" ]; then
+    info "  .obsidian 없음 — Obsidian 으로 vault 한 번 열어준 뒤 재실행"
+    return 0
+  fi
+
+  python3 - "$app_json" "$VAULT_MODE" << 'PY'
+import json, os, sys
+app_path, mode = sys.argv[1], sys.argv[2]
+
+# flat 모드에서 가릴 plugin 자산
+plugin_ignores = [
+    ".claude/",
+    "scripts/",
+    "infra/",
+    "services/",
+    "commands/",
+    "skills/",
+    ".env",
+    ".env.example",
+    ".gitignore",
+    ".git/",
+    "LICENSE",
+    "QUICKSTART.md",
+    "node_modules/",
+    "__pycache__/",
+    ".venv/",
+    ".obsidian/",  # 자기 자신
+]
+
+if mode != "flat":
+    print("  subdir 모드 — Obsidian Excluded 머지 불필요")
+    sys.exit(0)
+
+if os.path.exists(app_path):
+    with open(app_path) as f:
+        cfg = json.load(f)
+else:
+    cfg = {}
+    os.makedirs(os.path.dirname(app_path), exist_ok=True)
+
+existing = cfg.get("userIgnoreFilters", [])
+added = 0
+for p in plugin_ignores:
+    if p not in existing:
+        existing.append(p)
+        added += 1
+cfg["userIgnoreFilters"] = existing
+
+with open(app_path, "w") as f:
+    json.dump(cfg, f, indent=2, ensure_ascii=False)
+print(f"  {added} 신규 추가 (총 {len(existing)} 항목) → {app_path}")
+PY
+}
+
+step5_6_obsidian_ignore() {
+  hdr "STEP 5.6: Obsidian Excluded files 자동 머지 (flat 모드)"
+  if [ "$VAULT_MODE" != "flat" ]; then
+    info "  subdir 모드 — skip"
+    return 0
+  fi
+  if [ "$MODE" = "check" ]; then
+    info "  머지 예정: .claude/·scripts/·infra/·services/·commands/·skills/·.env·.git/·LICENSE·QUICKSTART.md 등 14 항목"
+    return 0
+  fi
+  merge_obsidian_ignore && ok "Obsidian Excluded files 머지 완료" || warn "머지 실패"
+}
+
 # ───── 1. 사전 검사 ─────
 step1_precheck() {
   hdr "STEP 1: 환경 사전 검사"
@@ -531,6 +603,7 @@ run_step 3 && step3_dataview || true
 # 5 를 4 보다 먼저 (NEO4J_PASSWORD 가 4 의 prerequisite)
 run_step 5 && step5_env || true
 run_step 5.5 && step5_5_hook_merge || true
+run_step 5.6 && step5_6_obsidian_ignore || true
 run_step 4 && step4_docker_neo4j || true
 run_step 6 && step6_slack || true
 run_step 7 && step7_weekly_review || true

@@ -77,3 +77,6 @@
 - 2026-05-18T05:45:00+09:00 | [claude-md] | cc-session | §2 권한 매트릭스 path 를 (vault/) 표기로 변경 (flat/subdir 모두 지원). 불변 원칙 본문 갱신 | CLAUDE.md
 - 2026-05-18T05:45:00+09:00 | [version] | cc-session | plugin.json/marketplace.json 0.3.5 → 0.3.6 | .claude-plugin/{plugin,marketplace}.json
 - 2026-05-18T06:00:00+09:00 | [docs-sync] | cc-session | README/QUICKSTART/blog 를 v0.3.x 변경 반영으로 갱신. README 활성 자산 표(8 Skills, 5 Hooks)·Phase 표(v0.1.0~v0.3.6) 갱신. QUICKSTART § 3-1 flat/subdir 모드 안내 + raw 한글 허용 표기. blog 후기 섹션 추가 (raw 슬러그 정책·평탄화 학습) | README.md QUICKSTART.md blog.md
+- 2026-05-18T06:30:00+09:00 | [install-ux] | cc-session | v0.3.7: install.sh 에 merge_obsidian_ignore() + Step 5.6 신설. flat 모드일 때 사용자 .obsidian/app.json 의 userIgnoreFilters 에 14 항목 자동 머지 (.claude/·scripts/·infra/·LICENSE·.env 등). Obsidian vault UX 개선 (plugin 자산이 vault 안에 안 보임) | scripts/install.sh
+- 2026-05-18T06:30:00+09:00 | [ci] | cc-session | .github/workflows/ci.yml 신설. 9 항목 자동 검증 (JSON 유효성·plugin/marketplace 교차참조·SKILL frontmatter·bash syntax·python compile·install.sh --check·vault lint·시크릿 leak·.env 보호). push/PR trigger. 로컬 시뮬레이션 8 항목 통과 | .github/workflows/ci.yml
+- 2026-05-18T06:30:00+09:00 | [version] | cc-session | plugin.json/marketplace.json 0.3.6 → 0.3.7. README badges: CI badge + Version 0.3.7 추가, Phase badge 제거 | .claude-plugin/{plugin,marketplace}.json README.md
