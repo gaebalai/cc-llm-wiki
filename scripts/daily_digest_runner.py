@@ -150,12 +150,50 @@ def main() -> int:
     print(f"기대 digest 페이지: {digest_path}")
     print()
 
+    # digest 페이지 골격 출력 (Skill 이 WebSearch 결과로 채울 자리)
+    digest_skeleton = f"""---
+id: {today}T070000-daily-digest
+type: digest
+status: reviewed
+locale: ko
+sources:
+  # Skill 이 WebSearch 결과 URL 5 건을 여기 채움
+related: []
+updated_at: {today}T07:00:00+09:00
+graph_synced_at: null
+---
+
+# Daily Digest — {today}
+
+## 1. <제목 1> ← Skill 이 채움
+- 출처: <도메인>
+- 요약: <1~2 줄>
+- 근거: > <인용>
+- 관련: [[<기존 topic>]] (있으면)
+
+## 2~5. ← 반복
+
+## 메타
+- 검색 쿼리 ({len(queries)} 건):
+"""
+    for q in queries:
+        digest_skeleton += f"  - {q}\n"
+    digest_skeleton += f"- positioning 출처: {pos_file}\n"
+    digest_skeleton += f"- runner: scripts/daily_digest_runner.py (v0.4.3+)\n"
+
+    print("=== digest 페이지 골격 (Skill 이 WebSearch 결과로 채움) ===")
+    print(digest_skeleton)
+
     if args.dry_run:
         print("[dry-run] 실 WebSearch 호출 없음. Claude Code Skill 에서 실 실행.")
         return 0
 
     print("[note] 실 WebSearch/WebFetch 는 Claude Code Skill 에서만 가능.")
-    print("       이 스크립트는 쿼리 설계까지만 — Skill 이 결과를 받아 digest 페이지 생성.")
+    print("       이 스크립트는 쿼리 설계 + digest 골격까지 — Skill 이 결과를 받아 본문 채움.")
+    print()
+    print("Skill 호출 (Claude Code 세션):")
+    print(f"  /daily-digest")
+    print(f"  → Skill 이 위 쿼리로 WebSearch 5 건 → digest 페이지 생성 → PR")
     return 0
 
 

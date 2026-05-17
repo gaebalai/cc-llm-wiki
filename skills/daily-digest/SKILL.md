@@ -51,35 +51,45 @@ Slack Webhook 이 있으면 요약 통지.
 
 ## 7 단계 절차
 
-### Step 1. 전제 조건 검증
+### Step 1. 전제 조건 검증 (v0.4.3+)
 ```bash
-[ -f vault/positioning.md ] || abort "positioning.md 작성 필요. 템플릿: skills/daily-digest/positioning.template.md"
+# positioning.md 가 템플릿 stub 인지 (markdown 코드 블록 안인지) 자동 감지
+python3 scripts/daily_digest_runner.py --vault <VAULT_DIR> --dry-run
 ```
-abort 시 사용자에게 템플릿 경로 안내.
+- 없거나 stub 이면 abort + 활성 명령 안내:
+  ```bash
+  # 자동 활성 (코드 블록 → 실 frontmatter)
+  python3 -c "import re,pathlib; p=pathlib.Path('vault/positioning.md'); t=p.read_text(); m=re.search(r'```markdown\\s*\\n(.*?)\\n```', t, re.S); p.write_text(m.group(1)) if m else None"
+  ```
 
 ### Step 2. positioning + topics 카탈로그 로드
-- `positioning.md` 의 `interests` · `avoid` · `trusted_sources` 추출
+- `daily_digest_runner.py` 가 자동 파싱:
+  - `interests` · `avoid` · `trusted_sources` · `tone` · `frequency_hint`
 - `vault/index.md` 의 topics 섹션 읽기 (JIT, 전수 로드 X)
 
 ### Step 3. 검색 쿼리 자동 설계 (3~5 쿼리)
-- `interests` 키워드 조합 + 최근 기간 한정 (after:2026-05-15 등)
-- `trusted_sources` site 한정 옵션
-- `avoid` 토픽 부정형 (-...)
+- runner 가 출력한 쿼리 그대로 사용:
+  ```
+  "<interest>" -<avoid1> -<avoid2> after:<7-days-ago>
+  ```
+- `trusted_sources` site 한정 옵션 (interests 수가 적을 때 보강)
 
-### Step 4. WebSearch + WebFetch (각 쿼리당 3~5 결과)
+### Step 4. WebSearch + WebFetch 실 호출 (Claude Code Skill 의 직접 호출)
 
-```python
-# 의사 코드
-candidates = []
-for q in queries:
-    results = WebSearch(q)
-    for r in results[:5]:
-        if r.url not in seen_urls_last_7days:
-            body = WebFetch(r.url, prompt="핵심 1 단락 요약 + 근거 인용 2 줄")
-            candidates.append({title, url, summary, source_domain})
+각 쿼리에 대해:
+```
+WebSearch(query="<query-string>")
+→ 결과 5 건 → 각 URL 에 대해:
+   WebFetch(url=<url>, prompt="핵심 1 단락 요약 + 근거 인용 2 줄 (한국어)")
+   → {title, url, summary, source_domain, key_quotes}
 ```
 
-`seen_urls_last_7days`: `vault/02_wiki/digests/` 의 최근 7 파일에서 `sources` grep.
+중복 배제 (7 일 내):
+```bash
+ls vault/02_wiki/digests/*.md 2>/dev/null | head -7 | xargs grep -h '^  - http' \
+  > /tmp/seen-urls.txt
+# 새 결과의 URL 이 seen-urls.txt 에 있으면 skip
+```
 
 ### Step 5. 상위 5 건 선정 (사람이 검토하기 좋게)
 - positioning 의 interests 와 매칭 강도
