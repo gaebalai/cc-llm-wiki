@@ -50,9 +50,9 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 
 | Skill | 목적 | 자동/수동 | 상태 |
 |---|---|---|---|
-| `ingest` | raw → `_drafts/` 토론형 변환 | 자동(raw 신규 감지) | P1 |
-| `lint` | orphan·반각공백·stale 검사 | 자동(weekly) | P2 |
-| `compile` | `_drafts/` → `topics/` 편찬 | 수동(`/compile`) | P3 |
+| `ingest` | raw → `_drafts/` 토론형 변환 | 자동(raw 신규 감지) | ✅ P1 |
+| `lint` | 10항목 검사 (slug·frontmatter·broken link·duplicate id 등) | 자동(weekly) | ✅ P2 |
+| `compile` | `_drafts/` → `topics/` 편찬 (lint 게이트 통과 시만) | 수동(`/compile`) | ✅ P3 |
 | `query` | local/graph 검색 라우터 | 자동 | P3~P5 |
 | `graph-sync` | wiki → Neo4j upsert | 자동(post-compile) | P5 |
 | `daily-digest` | 위키 기반 매일 5건 Slack 투고 | 수동(routine만) | P4 |
@@ -60,7 +60,8 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 | `morning-brief` | drafts·overdue 요약 | 자동(아침 인사 hook) | P3 |
 | `evening-reflect` | 모순 검사 + log 정정 | 자동(Stop hook) | P3 |
 
-P0~P1 시점에 활성화된 Skill: `ingest`, `lint` (lint는 P2부터 본격 활용).
+P3 시점 활성 Skill: `ingest`, `lint`, `compile` (3종).
+대시보드는 `vault/dashboards/status.md` (Obsidian Dataview 플러그인 필요).
 
 ---
 

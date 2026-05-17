@@ -19,3 +19,6 @@
 - 2026-05-17T18:00:00+09:00 | [lint] | cc-session | E=1 W-DRAFT=2 W=0 | vault/02_wiki/_lint/2026-05-17.md
 - 2026-05-17T18:05:00+09:00 | [schema-update] | human-via-cc | SCHEMA §5 lint 규칙 10항목으로 확장, draft 강등(WARN-DRAFT)·예외 처리 절차 추가 | vault/SCHEMA.md
 - 2026-05-17T18:05:00+09:00 | [skill-update] | human-via-cc | lint Skill 검사 대상 확장: _drafts/ 포함, 01_raw/ 파일명 검사 추가 (8→10 항목) | .claude/skills/lint/SKILL.md
+- 2026-05-17T18:20:00+09:00 | [skill-create] | cc-session | compile Skill 신설: 7-step 승급 절차, lint 게이트, broken link 4가지 처리 패턴 | .claude/skills/compile/SKILL.md
+- 2026-05-17T18:20:00+09:00 | [dashboard] | cc-session | Dataview 상태 보드 신설 (6 쿼리: 상태 카운트·draft 목록·최근 7일·orphan·broken link·lint 리포트 인덱스) | vault/dashboards/status.md
+- 2026-05-17T18:20:00+09:00 | [claude-md] | cc-session | §4 Skill Index 상태 갱신 (P1·P2·P3 활성 표기) | CLAUDE.md
