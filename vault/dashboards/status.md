@@ -84,6 +84,65 @@ SORT file.name DESC
 LIMIT 10
 ```
 
+## 7. graph 동기 큐 (미처리 wiki 변경)
+
+`.claude/queue/graph.txt` 는 `PostToolUse` hook 이 위키 편집을 적재하는 큐.
+큐가 비어있지 않으면 `sleep-maintenance` routine 이 매일 03:00 KST 에 `graph-sync --queue` 로 처리.
+즉시 동기화하려면 `/graph-sync --queue` 수동 호출.
+
+```dataview
+TABLE WITHOUT ID
+  file.link as "topic",
+  graph_synced_at as "마지막 동기"
+FROM "02_wiki/topics"
+WHERE type = "topic" AND (graph_synced_at = null OR date(graph_synced_at) < date(updated_at))
+SORT date(updated_at) DESC
+LIMIT 20
+```
+
+> `graph_synced_at` 이 `updated_at` 보다 오래된 (또는 null) topic 만 표시 → graph 미반영 후보.
+
+## 8. 최근 30 일 digest 도달 카운트 (positioning 운영 추이)
+
+```dataview
+TABLE WITHOUT ID
+  dateformat(file.ctime, "yyyy-MM-dd") as "date",
+  length(file.outlinks) as "links"
+FROM "02_wiki/digests"
+WHERE date(file.ctime) > date(today) - dur(30 days)
+SORT file.ctime DESC
+```
+
+> `daily-digest` routine 이 매일 07:00 KST 에 추가하는 디제스트. 빈 날짜 = positioning 매칭 0 건 또는 routine 미발사.
+
+## 9. type 별 분포
+
+```dataview
+TABLE WITHOUT ID
+  type as "type",
+  length(rows) as "count"
+FROM "02_wiki"
+WHERE type != null AND !contains(file.folder, "_lint") AND !contains(file.folder, "_drafts")
+GROUP BY type
+SORT length(rows) DESC
+```
+
+## 10. status 누락/잘못 검출 (lint 보강)
+
+```dataview
+TABLE WITHOUT ID
+  file.link as "file",
+  type as "type",
+  status as "status"
+FROM "02_wiki"
+WHERE type != null
+  AND !contains(file.folder, "_lint")
+  AND !contains(file.folder, "_drafts")
+  AND (status = null OR !contains(list("draft", "reviewed", "published"), status))
+```
+
+> `lint` Skill 이 같은 검사를 수행하지만 Dataview 로 즉시 시각화. enum 외 값이거나 누락된 page 만 표시.
+
 ---
 
 ## Skill 호출 단축키
