@@ -35,9 +35,10 @@ graph_synced_at: null | <ISO8601>      # graph-sync 성공 시 갱신
 
 ## 3. 명명 규칙
 
-- 파일명: `YYYY-MM-DD-<kebab-slug>.md`. slug는 영문 소문자·숫자·하이픈만(반각공백·콜론·슬래시 금지)
-- wikilink: `[[<exact-slug-without-extension>]]`. 띄어쓰기·대문자·이모지 금지
-- raw 파일도 동일 규칙: `vault/01_raw/<genre>/YYYY-MM-DD-<slug>.md`
+- **wiki 파일**: `YYYY-MM-DD-<kebab-slug>.md` 또는 `<kebab-slug>.md`. slug 는 **영문 소문자·숫자·하이픈만** (반각공백·콜론·슬래시 금지). wikilink 호환성을 위해 강제.
+- **wikilink**: `[[<exact-slug-without-extension>]]`. 띄어쓰기·대문자·이모지 금지.
+- **raw 파일**: `YYYY-MM-DD-<slug>.md` 권장. slug 는 영문이 권장이나 **한글·공백 허용** (Web Clipper 친화). 날짜 prefix 도 권장이지만 강제 아님. lint 가 위반 시 WARN-RAW (ERROR 아님).
+- **이유**: raw 는 외부 자료 보존이라 원문 제목 유지가 가치 있음. wiki 는 wikilink 호환성이 필수라 엄격.
 
 ---
 
@@ -68,8 +69,8 @@ SCHEMA는 **무엇을 위반으로 볼지의 정의**, SKILL은 **어떻게 검�
 | wikilink 끊김 | ERROR | `[[slug]]` 가 가리키는 `.md` 파일 없음 |
 | └ draft 강등 | WARN-DRAFT | 위 위반이 `vault/02_wiki/_drafts/` 내부에만 있을 때 — 의도된 미작성 허용. **승급(`topics/` 이동) 시 ERROR 로 격상** |
 | duplicate `id` | ERROR | wiki·Neo4j 2 층 공유 키 충돌 (그래프 동기 깨짐) |
-| wiki 슬러그 규칙 | ERROR | `vault/02_wiki/` 하위 파일명이 `^[a-z0-9-]+\.md$` 불일치 (반각공백·대문자·이모지·한글 금지) |
-| raw 슬러그 규칙 | ERROR | `vault/01_raw/` 하위 파일명이 `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$` 불일치 |
+| wiki 슬러그 규칙 | ERROR | `vault/02_wiki/` 하위 파일명이 `^[a-z0-9-]+\.md$` 불일치 (반각공백·대문자·이모지·한글 금지) — wikilink 호환성 필수 |
+| raw 슬러그 규칙 | WARN-RAW | `vault/01_raw/` 하위 파일명 — 권장: `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$`, 위반 시 알림만 (원문 보존 우선, Web Clipper 한글 자료 친화) |
 | orphan | WARN | 어떤 wikilink로도 참조되지 않음. **단 `_drafts/`·`digests/`·`self/`는 orphan 정상 폴더로 제외** |
 | stale | WARN | `updated_at` 90일 이상 + `sources` 의 raw 파일 mtime이 더 최근 |
 

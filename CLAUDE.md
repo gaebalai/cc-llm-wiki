@@ -17,20 +17,25 @@ AI 사서로서 사용자의 지식을 **복리로 성장**시킨다. 정보를 
 
 | 경로 | 사용자 | Claude Code 대화 | Skill(배치) |
 |---|---|---|---|
-| `vault/01_raw/**` | RW (메타-only 정리, SCHEMA §6) | **R only** | R only (ingest) |
-| `vault/02_wiki/_drafts/**` | RW | RW | W (ingest) |
-| `vault/02_wiki/topics/**` | RW | RW | W (compile) |
-| `vault/02_wiki/decisions/**` | RW (append) | R | append only |
-| `vault/02_wiki/self/**` | RW | R only | **금지** |
-| `vault/02_wiki/digests/**` | R | R | W (daily-digest) |
-| `vault/02_wiki/_lint/**` | R | R | W (lint) |
-| `vault/SCHEMA.md`, `vault/03_schema/**` | RW | R only | R only |
-| `vault/index.md`, `vault/log.md` | R | RW (append) | RW (append) |
+| `(vault/)01_raw/**` | RW (메타-only 정리, SCHEMA §6) | **R only** | R only (ingest) |
+| `(vault/)02_wiki/_drafts/**` | RW | RW | W (ingest) |
+| `(vault/)02_wiki/topics/**` | RW | RW | W (compile) |
+| `(vault/)02_wiki/decisions/**` | RW (append) | R | append only |
+| `(vault/)02_wiki/self/**` | RW | R only | **금지** |
+| `(vault/)02_wiki/digests/**` | R | R | W (daily-digest) |
+| `(vault/)02_wiki/_lint/**` | R | R | W (lint) |
+| `(vault/)SCHEMA.md`, `(vault/)03_schema/**` | RW | R only | R only |
+| `(vault/)index.md`, `(vault/)log.md` | R | RW (append) | RW (append) |
 | `.claude/**` | RW | R only | R only |
 | `infra/**`, `services/**` | RW | RW | R only |
 
-**불변 원칙**: `vault/01_raw/`에 대한 모든 쓰기 시도는 Hook(`PreToolUse`)이
+**불변 원칙**: `01_raw/`에 대한 모든 쓰기 시도는 Hook(`PreToolUse`)이
 exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정규화하지 않는다.
+
+**vault 컨벤션** (v0.3.6+): `(vault/)` 표기는 두 가지 모두 지원:
+- **flat 모드** (Obsidian 권장): `TARGET_DIR` 자체가 vault, `01_raw/`·`02_wiki/` 가 root 에 직접
+- **subdir 모드** (dev repo, 옛 컨벤션): `TARGET_DIR/vault/` 아래
+`install.sh` 가 `.obsidian` 위치로 자동 감지. 새 사용자는 flat 기본.
 
 ---
 

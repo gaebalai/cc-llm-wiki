@@ -69,6 +69,20 @@ fi
 
 cd "$TARGET_DIR"
 
+# ───── VAULT_DIR + 컨벤션 자동 감지 (v0.3.6+) ─────
+# flat:   TARGET_DIR 자체가 Obsidian vault (01_raw, 02_wiki 가 TARGET_DIR 안 직접)
+# subdir: TARGET_DIR/vault/ 가 Obsidian vault (옛 컨벤션, dev repo)
+VAULT_DIR="$TARGET_DIR"
+VAULT_MODE="flat"
+if [ -d "$TARGET_DIR/vault/.obsidian" ] || [ -d "$TARGET_DIR/vault/01_raw" ]; then
+  VAULT_DIR="$TARGET_DIR/vault"
+  VAULT_MODE="subdir"
+elif [ -d "$TARGET_DIR/.obsidian" ] || [ -d "$TARGET_DIR/01_raw" ]; then
+  VAULT_DIR="$TARGET_DIR"
+  VAULT_MODE="flat"
+fi
+# 새 사용자 (둘 다 없음) → 기본 flat (v0.3.6+ 권장)
+
 ok()    { echo "${C_GREEN}✓${C_RESET} $*"; }
 warn()  { echo "${C_YELLOW}⚠${C_RESET} $*"; }
 fail()  { echo "${C_RED}✗${C_RESET} $*" >&2; }
@@ -93,14 +107,30 @@ copy_templates() {
     fail "rsync 필요 (macOS 기본 포함)"; return 1
   fi
 
-  # 핵심 디렉터리 (idempotent, 사용자 변경 보존: --ignore-existing on file-level OK,
-  # 디렉터리 안 신규 파일은 추가)
-  for d in vault infra services scripts .claude/routines commands skills; do
+  # vault 콘텐츠: VAULT_MODE 에 따라 분기
+  # - flat:   $src/vault/* 를 $dst (TARGET_DIR) 자체로 (Obsidian 평탄화)
+  # - subdir: $src/vault/* 를 $dst/vault/ 로 (옛 컨벤션)
+  if [ -d "$src/vault" ]; then
+    local vault_dst
+    if [ "$VAULT_MODE" = "flat" ]; then
+      vault_dst="$dst"
+    else
+      vault_dst="$dst/vault"
+      mkdir -p "$vault_dst"
+    fi
+    rsync -a --ignore-existing \
+      --exclude '__pycache__' --exclude '*.pyc' \
+      --exclude '.obsidian/workspace*' --exclude '.obsidian/cache' \
+      "$src/vault/" "$vault_dst/" 2>/dev/null || true
+    info "  vault 콘텐츠 → $vault_dst ($VAULT_MODE)"
+  fi
+
+  # plugin 자산 (vault 무관, TARGET_DIR 에 직접)
+  for d in infra services scripts .claude/routines commands skills; do
     [ -d "$src/$d" ] || continue
     mkdir -p "$dst/$d"
     rsync -a --ignore-existing \
       --exclude '__pycache__' --exclude '*.pyc' \
-      --exclude '.obsidian/workspace*' --exclude '.obsidian/cache' \
       "$src/$d/" "$dst/$d/" 2>/dev/null || true
   done
 
@@ -189,6 +219,7 @@ step1_precheck() {
 
   info "REPO_ROOT (스크립트 위치): $REPO_ROOT"
   info "TARGET_DIR (작업 디렉터리): $TARGET_DIR"
+  info "VAULT_DIR ($VAULT_MODE 모드): $VAULT_DIR"
   if [ "$PLUGIN_INSTALL" = "true" ]; then
     info "${C_BOLD}PLUGIN_INSTALL 감지${C_RESET} — 템플릿을 TARGET_DIR 로 복사, Hook 머지"
     if [ "$MODE" != "check" ]; then
@@ -249,13 +280,13 @@ step2_obsidian() {
     fi
   fi
 
-  info "Vault 폴더: $TARGET_DIR/vault/"
+  info "Vault 폴더: $VAULT_DIR (mode: $VAULT_MODE)"
   if [ "$MODE" != "check" ]; then
     prompt "Obsidian 으로 vault 열까요? (URI scheme 호출) [y/N]"
     read -r ans || ans="n"
     case "$ans" in
-      y|Y) open "obsidian://open?path=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$TARGET_DIR/vault")" && ok "Obsidian 열기 요청" || warn "URI 열기 실패 (직접 열어주세요)" ;;
-      *)   info "수동: Obsidian → Open folder as vault → $TARGET_DIR/vault" ;;
+      y|Y) open "obsidian://open?path=$(python3 -c "import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1]))" "$VAULT_DIR")" && ok "Obsidian 열기 요청" || warn "URI 열기 실패 (직접 열어주세요)" ;;
+      *)   info "수동: Obsidian → Open folder as vault → $VAULT_DIR" ;;
     esac
   fi
 
@@ -273,19 +304,21 @@ step3_dataview() {
   info "  2) Browse → 검색 'Dataview' → Install → Enable"
   info "  3) 보드 열기: vault/dashboards/status.md"
 
+  local vault_name
+  vault_name=$(basename "$VAULT_DIR")
   if [ "$MODE" != "check" ]; then
     prompt "status.md 를 Obsidian 에서 열까요? [y/N]"
     read -r ans || ans="n"
     case "$ans" in
-      y|Y) open "obsidian://open?vault=vault&file=dashboards/status.md" 2>/dev/null \
-              || open "$TARGET_DIR/vault/dashboards/status.md" \
+      y|Y) open "obsidian://open?vault=$vault_name&file=dashboards/status.md" 2>/dev/null \
+              || open "$VAULT_DIR/dashboards/status.md" \
               || warn "열기 실패 (직접 열기)"
            ok "status.md 열기 요청" ;;
       *)   info "수동: Obsidian 사이드바에서 dashboards/status.md 클릭" ;;
     esac
   fi
 
-  local fpath="$TARGET_DIR/vault/dashboards/status.md"
+  local fpath="$VAULT_DIR/dashboards/status.md"
   [ -f "$fpath" ] && ok "$fpath 존재" || warn "$fpath 누락 — 템플릿 복사 안 됐을 수"
 }
 
@@ -476,9 +509,9 @@ step7_weekly_review() {
   info "  DRY_RUN=0 python3 services/graph/ingest_graph.py --all --env .env"
   info "  python3 services/graph/query_graph.py causal_path --param company_canonical=Anthropic --env .env"
   info ""
-  info "운영 데이터 (TARGET_DIR=$TARGET_DIR):"
-  info "  현재 topics: $(find "$TARGET_DIR/vault/02_wiki/topics" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
-  info "  현재 raw   : $(find "$TARGET_DIR/vault/01_raw" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
+  info "운영 데이터 (VAULT_DIR=$VAULT_DIR, mode=$VAULT_MODE):"
+  info "  현재 topics: $(find "$VAULT_DIR/02_wiki/topics" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
+  info "  현재 raw   : $(find "$VAULT_DIR/01_raw" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
   info ""
   ok "설치 완료."
   info ""

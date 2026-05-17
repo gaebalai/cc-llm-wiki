@@ -53,7 +53,7 @@ allowed-tools:
 | 5 | wikilink 끊김 (참조한 slug가 존재하지 않음) | ERROR | `[[...]]` 추출 후 파일 존재 확인 (단, `_drafts/`의 끊긴 링크는 **WARN-DRAFT** 로 강등 — 의도된 미작성일 수 있음) |
 | 6 | duplicate `id` (4층 공유 키 충돌) | ERROR | 전체 id 수집 후 중복 검사 |
 | 7 | wiki 슬러그 규칙 위반 (`vault/02_wiki/` 하위 `.md`) | ERROR | 파일명 regex `^[a-z0-9-]+\.md$` 검사 (단, `YYYY-MM-DD-` 접두는 권장) |
-| 8 | **raw 슬러그 규칙 위반** (`vault/01_raw/` 하위 `.md`) | ERROR | 파일명 regex `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$` (SCHEMA §3) |
+| 8 | **raw 슬러그 권장 형식** (`vault/01_raw/` 또는 `01_raw/` 하위 `.md`) | **WARN-RAW** | 권장 regex `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$`. 위반 시 알림만 (원문 보존 우선, Web Clipper 한글 자료 친화 — SCHEMA §3·§5) |
 | 9 | orphan 페이지 (어디서도 링크되지 않음) | WARN | 전체 wikilink 그래프 빌드 후 in-degree 0 (단, `_drafts/`·`digests/`·`self/`는 orphan 정상 — 제외) |
 | 10 | stale (updated_at이 90일 이상 + sources의 raw가 더 최근) | WARN | mtime 비교 |
 
