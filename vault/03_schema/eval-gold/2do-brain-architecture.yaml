@@ -1,0 +1,20 @@
+# auto-seeded from rule-based ingest_graph.py — 사람 검수 후 보강 필요
+# 출처: vault/02_wiki/topics/2026-05-17-2do-brain-architecture.md
+
+entities:
+  - canonical: Claude Code
+    type: Technology
+  - canonical: Neo4j
+    type: Technology
+  - canonical: Obsidian
+    type: Technology
+  - canonical: Cypher
+    type: Technology
+  - canonical: GraphRAG
+    type: Solution
+
+relations:
+  # 룰베이스는 MENTIONS 만 추출. SOLVES/USES 등 의미 관계는 사람이 추가:
+  # - src: Anthropic
+  #   type: USES
+  #   dst: Claude Code

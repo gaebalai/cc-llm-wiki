@@ -154,3 +154,13 @@ jobs:
         run: |
           git check-ignore .env 2>/dev/null && echo "  ✓ .env ignored" \
             || (echo "  ⚠ .env 가 git 에 추적될 수 있음"; true)
+
+      # ───── 10. eval rule vs gold (v0.4.2+) ─────
+      - name: Extraction eval (rule vs gold)
+        run: |
+          if [ -d vault/03_schema/eval-gold ] && [ "$(ls vault/03_schema/eval-gold/*.yaml 2>/dev/null)" ]; then
+            python services/graph/eval.py --all --mode rule --env .env.example
+            # CI 환경 정답셋 통과 기준: 평균 F1 ≥ 0.9 권장 (현재는 통과 여부만)
+          else
+            echo "  vault/03_schema/eval-gold/ 비어있음 — skip"
+          fi
