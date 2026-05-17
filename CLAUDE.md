@@ -151,14 +151,16 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | `kagura-memory` | P6 옵션 | `claude mcp add` |
 
 **Routines** (`.claude/routines/`):
-| 이름 | cron(KST) | 활성 Phase |
-|---|---|---|
-| `wiki-ingest-sweep` | `0 * * * *` | P1 |
-| `weekly-lint` | `0 6 * * 0` | P2 |
-| `daily-digest` | `0 7 * * *` | P4 |
-| `publish-multilang` | `0 9 * * *` | P4 |
-| `sleep-maintenance` | `0 3 * * *` | P5 |
-| `morning-digest-recap` | `0 22 * * 1-5` | P4 |
+| 이름 | cron(KST) | 상태 | 비고 |
+|---|---|---|---|
+| `wiki-ingest-sweep` | `0 * * * *` | TBD | 명세 미작성 |
+| `weekly-lint` | `0 6 * * 0` | ✅ active | lint Skill 호출, dry-run Slack |
+| `daily-digest` | `0 7 * * *` | ⏸ dry-run | Skill 본체 미작성 |
+| `publish-multilang` | `0 9 * * *` | ⏸ dry-run | Skill 본체 미작성, Cloudflare 토큰 필요 |
+| `sleep-maintenance` | `0 3 * * *` | TBD | P5 진입 후 |
+| `morning-digest-recap` | `0 22 * * 1-5` | TBD | daily-digest 안정 후 |
+
+routine 명세는 `.claude/routines/<name>.md`. 실제 cron 등록은 별도 `/schedule create` 호출.
 
 ---
 

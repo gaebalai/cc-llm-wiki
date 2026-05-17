@@ -26,3 +26,5 @@
 - 2026-05-17T18:45:00+09:00 | [ingest] | cc-session | 약식 ingest (사용자 "진행" 승인) | docs/11 raw에서 2do-brain-architecture draft 추출
 - 2026-05-17T18:50:00+09:00 | [compile] | cc-session | 클러스터 compile (SKILL 예외 패턴 1, 3건 동시) | _drafts/{graphrag-poc-with-neo4j,entity-disambiguation-strategy,2do-brain-architecture}.md -> topics/
 - 2026-05-17T18:50:00+09:00 | [index] | cc-session | index.md topics/ 섹션에 3건 등록, 통계 0→3 | vault/index.md
+- 2026-05-17T19:10:00+09:00 | [scaffold] | cc-session | P4 골격: .env.example, scripts/post_slack.py (dry-run 검증 OK), 3 routine 명세 | .env.example scripts/post_slack.py .claude/routines/{weekly-lint,daily-digest,publish-multilang}.md
+- 2026-05-17T19:10:00+09:00 | [claude-md] | cc-session | §11 routine 표 상태 갱신 (active/dry-run/TBD) | CLAUDE.md
