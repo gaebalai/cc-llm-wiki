@@ -33,3 +33,8 @@
 - 2026-05-17T19:40:00+09:00 | [claude-md] | cc-session | §10 Graph Layer active 갱신, §4 graph-sync 활성 표기 | CLAUDE.md
 - 2026-05-17T20:00:00+09:00 | [scope-decision] | human | "공개 의도 없음, 로컬 전용" 결정. publish 라인 전체 제거 | .claude/routines/publish-multilang.md dist/ Cloudflare 키 §4 publish Skill §11 publish-multilang 행
 - 2026-05-17T20:00:00+09:00 | [cleanup] | cc-session | CLAUDE.md §3-⑤ self 노출 publish 제거, §6 frontmatter locale 주석 갱신, §7 브랜치 prefix publish 제거, §9 publish 실패 행 제거, §11 slack 옵션 표기 | CLAUDE.md README.md .env.example .gitignore
+- 2026-05-17T20:15:00+09:00 | [security] | human-via-cc | .env.example 에 실제 시크릿 유입 사고 → 사용자가 직접 복원 + .env 분리. commit 전 차단 | .env.example .env (gitignore)
+- 2026-05-17T21:00:00+09:00 | [self-page] | cc-session | self/llm-wiki-origins.md 작성: 11 docs DNA 트리, 채택/거른/미루기 매트릭스, 회고 메모 슬롯 | vault/02_wiki/self/llm-wiki-origins.md
+- 2026-05-17T21:00:00+09:00 | [routine] | cc-session | weekly-review routine 신설 (일 21:00 KST, 사람 회고 슬롯) | .claude/routines/weekly-review.md
+- 2026-05-17T21:00:00+09:00 | [hook] | cc-session | PostToolUse 에 graph 큐 적재 hook 추가 (topics/*.md Edit 시 .claude/queue/graph.txt append) — P5 보완 | .claude/settings.json
+- 2026-05-17T21:00:00+09:00 | [claude-md] | cc-session | §10 동기 경로 ✅ P6 active, §11 weekly-review 추가 | CLAUDE.md README.md

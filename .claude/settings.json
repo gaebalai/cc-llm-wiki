@@ -47,6 +47,17 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"const fs=require('fs');const path=require('path');let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const p=(j.tool_input&&j.tool_input.file_path)||'';if(/(^|\\/)vault\\/02_wiki\\/topics\\/.+\\.md$/.test(p)){const queueDir='.claude/queue';if(!fs.existsSync(queueDir))fs.mkdirSync(queueDir,{recursive:true});const queue=path.join(queueDir,'graph.txt');const rel=p.replace(process.cwd()+'/','');fs.appendFileSync(queue,rel+'\\n');console.error('[hook] graph queue: '+rel)}}catch(e){}})\""
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "startup",

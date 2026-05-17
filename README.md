@@ -52,8 +52,8 @@ cc-llm-wiki/
 | **P2** | Context 가드 (lint 10 항목 + SCHEMA §5 명문화) | ✅ |
 | **P3** | compile Skill + Dataview 보드 | ✅ |
 | **P4** | daily-digest + weekly-lint routine | ✅ 골격 (Skill 본체 후속) |
-| **P5** | Neo4j GraphRAG PoC | ✅ 골격 (Docker·neo4j 드라이버 필요) |
-| **P6** | 정착·확장 (Kagura MCP 옵션) | 다음 |
+| **P5** | Neo4j GraphRAG PoC | ✅ 골격 + PostToolUse queue hook 활성 |
+| **P6** | 정착 (origins 회고 + weekly-review routine) | ✅ |
 
 자세한 설계: `~/.claude/plans/docs-11-twinkling-lemon.md`
 

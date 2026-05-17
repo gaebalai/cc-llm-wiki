@@ -136,8 +136,8 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 - 노드 라벨 (6종 고정): `Source` · `Person` · `Company` · `Technology` · `Challenge` · `Solution`
 - 관계 타입 (5종): `REFERS_TO` · `CONTRADICTS` · `MENTIONS` · `SOLVES` · `USES`
 - 엔티티 정규화: `vault/03_schema/aliases.yaml` (canonical_name + aliases, 14 entries 초기값)
-- 동기 경로: wiki 편집 → (P5 후속) `PostToolUse` hook 이 `.claude/queue/graph.txt` 적재
-            → `sleep-maintenance` routine 또는 사용자 `/graph-sync` 호출
+- 동기 경로 (✅ P6 활성): wiki/topics/ 편집 → `PostToolUse` hook 이 `.claude/queue/graph.txt` 적재
+            → `sleep-maintenance` routine (TBD) 또는 사용자가 `/graph-sync --queue` 호출
 - 질의: **자연어 → Cypher 생성 금지**. `services/graph/templates/*.cypher` 만 사용 (3 템플릿: causal_path, concept_neighbors, orphan_audit)
 
 자산:
@@ -167,9 +167,10 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | 이름 | cron(KST) | 상태 | 비고 |
 |---|---|---|---|
 | `wiki-ingest-sweep` | `0 * * * *` | TBD | 명세 미작성 |
-| `weekly-lint` | `0 6 * * 0` | ✅ active | lint Skill 호출, dry-run Slack |
+| `weekly-lint` | `0 6 * * 0` | ✅ active | lint Skill 호출, Slack 통지 옵션 |
+| `weekly-review` | `0 21 * * 0` | ✅ active | 사람 회고 슬롯 (자동 처리 없음, 통계만 출력) |
 | `daily-digest` | `0 7 * * *` | ⏸ dry-run | Skill 본체 미작성 |
-| `sleep-maintenance` | `0 3 * * *` | TBD | P5 진입 후 |
+| `sleep-maintenance` | `0 3 * * *` | TBD | graph-sync --queue 정기 호출 (P6 후속) |
 | `morning-digest-recap` | `0 22 * * 1-5` | TBD | daily-digest 안정 후 |
 
 routine 명세는 `.claude/routines/<name>.md`. 실제 cron 등록은 별도 `/schedule create` 호출.
