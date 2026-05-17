@@ -5,11 +5,15 @@
 // 출력:
 //   path : 노드/엣지 시퀀스
 //   nodes_canonical : 경로 상 canonical_name 배열
+//
+// 주의: v0.3.0 의 룰베이스 ingest_graph.py 는 MENTIONS·REFERS_TO 만 생성.
+// SOLVES/USES 는 v0.4.0 의 LangChain LLMGraphTransformer 도입 후 활성.
+// 그 때까지는 MENTIONS|REFERS_TO 만으로 fallback (의미적으로는 "같이 등장한 노드들의 경로").
 
 MATCH path = (c:Company {canonical_name: $company_canonical})
-  -[:MENTIONS|REFERS_TO*1..3]-(ch:Challenge)
-  -[:SOLVES|REFERS_TO*1..3]-(s:Solution)
-  -[:USES|MENTIONS|REFERS_TO*0..3]-(t:Technology)
+  -[:MENTIONS|REFERS_TO|SOLVES|USES*1..3]-(ch:Challenge)
+  -[:MENTIONS|REFERS_TO|SOLVES|USES*1..3]-(s:Solution)
+  -[:MENTIONS|REFERS_TO|SOLVES|USES*0..3]-(t:Technology)
 WHERE c <> ch AND ch <> s AND s <> t
 RETURN
   [n IN nodes(path) | n.canonical_name] AS nodes_canonical,

@@ -9,7 +9,7 @@ related:
   - "[[entity-disambiguation-strategy]]"
   - "[[2do-brain-architecture]]"
 updated_at: 2026-05-18T02:30:00+09:00
-graph_synced_at: null
+graph_synced_at: 2026-05-18T03:30:00+09:00
 ---
 
 # GraphRAG PoC with Neo4j

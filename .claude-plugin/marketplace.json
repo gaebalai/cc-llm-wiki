@@ -7,14 +7,14 @@
   },
   "metadata": {
     "description": "단일-plugin 마켓플레이스. Karpathy LLM Wiki 원전부터 Neo4j GraphRAG PoC 까지 11개 설계 문서를 통합한 Claude Code 중심 로컬 전용 LLM Wiki.",
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "plugins": [
     {
       "name": "cc-llm-wiki",
       "source": ".",
       "description": "3층 격리(raw/wiki/schema) + 9-Skill 카탈로그 + Hook 가드레일 + Neo4j GraphRAG + Obsidian Dataview. /install 한 줄로 7-단계 환경 셋업.",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "category": "knowledge-management",
       "tags": [
         "obsidian",

@@ -351,12 +351,12 @@ step4_docker_neo4j() {
   fi
 
   if [ "$MODE" = "check" ]; then
-    info "다음 명령으로 기동: docker compose -f $compose_file up -d"
+    info "다음 명령으로 기동: docker compose --env-file $TARGET_DIR/.env -f $compose_file up -d"
     return 0
   fi
 
   info "Neo4j 컨테이너 기동..."
-  docker compose -f "$compose_file" up -d || { fail "compose up 실패"; return 1; }
+  docker compose --env-file "$TARGET_DIR/.env" -f "$compose_file" up -d || { fail "compose up 실패"; return 1; }
 
   info "Neo4j Browser 준비 대기 (최대 60초)..."
   for i in $(seq 1 30); do
@@ -367,7 +367,7 @@ step4_docker_neo4j() {
     fi
     sleep 2
   done
-  warn "Neo4j 준비 안 됨 (timeout). 컨테이너 로그 확인: docker compose -f $compose_file logs neo4j"
+  warn "Neo4j 준비 안 됨 (timeout). 컨테이너 로그 확인: docker compose --env-file $TARGET_DIR/.env -f $compose_file logs neo4j"
 }
 
 # ───── 5. .env 생성 + NEO4J_PASSWORD 보장 ─────
