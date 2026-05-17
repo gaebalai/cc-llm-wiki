@@ -28,3 +28,6 @@
 - 2026-05-17T18:50:00+09:00 | [index] | cc-session | index.md topics/ 섹션에 3건 등록, 통계 0→3 | vault/index.md
 - 2026-05-17T19:10:00+09:00 | [scaffold] | cc-session | P4 골격: .env.example, scripts/post_slack.py (dry-run 검증 OK), 3 routine 명세 | .env.example scripts/post_slack.py .claude/routines/{weekly-lint,daily-digest,publish-multilang}.md
 - 2026-05-17T19:10:00+09:00 | [claude-md] | cc-session | §11 routine 표 상태 갱신 (active/dry-run/TBD) | CLAUDE.md
+- 2026-05-17T19:40:00+09:00 | [scaffold] | cc-session | P5 GraphRAG PoC 골격: docker-compose, aliases.yaml(14 entries), ingest_graph.py, query_graph.py, Cypher 템플릿 3건, graph-sync SKILL | infra/neo4j/ services/graph/ vault/03_schema/aliases.yaml .claude/skills/graph-sync/
+- 2026-05-17T19:40:00+09:00 | [dry-run] | cc-session | ingest_graph.py --all --dry-run 검증 OK | sources=3 nodes=N rels=N (Neo4j 미연결, 추출만)
+- 2026-05-17T19:40:00+09:00 | [claude-md] | cc-session | §10 Graph Layer active 갱신, §4 graph-sync 활성 표기 | CLAUDE.md

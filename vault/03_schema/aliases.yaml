@@ -1,0 +1,84 @@
+# Entity Alias Table — [[entity-disambiguation-strategy]] 의 룰베이스 정규화 데이터
+#
+# 형식:
+#   - canonical: <표준 표기>
+#     type: Person | Company | Technology | Challenge | Solution
+#     aliases: [<표기 변형들>]
+#     note: (선택) 동음이의 구분, 출처
+#
+# 운영 원칙 (SCHEMA §4 보강):
+# 1. 본 파일은 사람이 직접 편집한다. LLM 자동 추가 절대 금지 (오정렬 위험)
+# 2. ingest_graph.py 가 노드 생성 직후 본 테이블로 강제 매핑
+# 3. 변경 시 sleep-maintenance routine 이 그래프 전체 재정렬
+# 4. 동음이의는 canonical 에 한정자 부착 (예: "Apple (회사)" vs "Apple (과일)")
+#    실제 매칭은 canonical 정확 일치 + type 일치 시에만
+
+aliases:
+  # ── Technology ──
+  - canonical: Claude Code
+    type: Technology
+    aliases: ["claude code", "Claude-Code", "CC", "cc"]
+    note: Anthropic CLI. "CC" 는 약어, 본 vault 내부 슬랭
+
+  - canonical: Neo4j
+    type: Technology
+    aliases: ["neo4j", "NEO4J", "네오포제이", "neo 4j"]
+
+  - canonical: LangChain
+    type: Technology
+    aliases: ["langchain", "Lang Chain", "랭체인"]
+
+  - canonical: Obsidian
+    type: Technology
+    aliases: ["obsidian", "옵시디언"]
+
+  - canonical: APOC
+    type: Technology
+    aliases: ["apoc", "Apoc", "APOC plugin", "Awesome Procedures On Cypher"]
+
+  - canonical: Cypher
+    type: Technology
+    aliases: ["cypher", "사이퍼", "Neo4j 쿼리 언어"]
+
+  # ── Company ──
+  - canonical: Anthropic
+    type: Company
+    aliases: ["anthropic", "앤트로픽", "Anthropic Inc."]
+
+  - canonical: OpenAI
+    type: Company
+    aliases: ["openai", "오픈AI", "오픈에이아이", "Open AI"]
+
+  # ── Person ──
+  - canonical: Andrej Karpathy
+    type: Person
+    aliases: ["Karpathy", "karpathy", "안드레이 카파시", "카파시", "@karpathy"]
+
+  # ── Challenge (반복 등장하는 문제 유형) ──
+  - canonical: Context Rot
+    type: Challenge
+    aliases: ["context rot", "컨텍스트 부패", "context degradation"]
+
+  - canonical: Entity Disambiguation
+    type: Challenge
+    aliases: ["entity disambiguation", "노드 분열", "표기 흔들림", "엔티티 정규화"]
+
+  - canonical: Recursive Summary Decay
+    type: Challenge
+    aliases: ["recursive summary decay", "재귀 요약 열화", "summary degradation"]
+
+  # ── Solution (이 vault 에서 정의한 해결 패턴) ──
+  - canonical: GraphRAG
+    type: Solution
+    aliases: ["graphrag", "graph rag", "Graph-RAG", "그래프 RAG"]
+    note: 일반 명사 vs Microsoft GraphRAG 제품 구분 필요 시 후자는 "MS GraphRAG"
+
+  - canonical: 3-Layer Quarantine
+    type: Solution
+    aliases: ["3층 격리", "three-layer quarantine", "raw/wiki/schema"]
+    note: 본 vault 의 핵심 아키텍처 패턴
+
+# 통계 (수동 갱신)
+# version: 1
+# updated_at: 2026-05-17T19:30:00+09:00
+# total_entries: 14

@@ -1,0 +1,53 @@
+# cc-llm-wiki — Neo4j 5.18.1 + APOC (P5 GraphRAG PoC)
+#
+# 기동:
+#   cp ../../.env.example ../../.env  # NEO4J_PASSWORD 채우기
+#   docker compose -f infra/neo4j/docker-compose.yml up -d
+# 접속:
+#   http://localhost:7474  (Browser UI)
+#   bolt://localhost:7687  (드라이버용)
+# 중지/삭제:
+#   docker compose -f infra/neo4j/docker-compose.yml down
+#   rm -rf infra/neo4j/data  # 데이터까지 삭제
+
+services:
+  neo4j:
+    image: neo4j:5.18.1
+    container_name: cc-llm-wiki-neo4j
+    restart: unless-stopped
+    ports:
+      - "7474:7474"   # HTTP / Browser
+      - "7687:7687"   # Bolt
+    environment:
+      # 사용자/비밀번호. .env 의 NEO4J_PASSWORD 가 비어 있으면 컨테이너 기동 실패 (의도된 안전장치).
+      NEO4J_AUTH: "${NEO4J_USERNAME:-neo4j}/${NEO4J_PASSWORD:?NEO4J_PASSWORD 가 비어 있음. .env 설정 필요}"
+
+      # APOC 플러그인 허용 (LangChain LLMGraphTransformer 가 일부 APOC 호출)
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+      NEO4J_dbms_security_procedures_allowlist: "apoc.*"
+
+      # 메모리 (M2 mac 기준 보수적 값. 운영 시 조정)
+      NEO4J_dbms_memory_heap_initial__size: "512m"
+      NEO4J_dbms_memory_heap_max__size: "1G"
+      NEO4J_dbms_memory_pagecache_size: "512m"
+
+    volumes:
+      # 데이터는 vault 와 분리. infra/neo4j/data 는 .gitignore 처리됨
+      - ./data:/data
+      - ./logs:/logs
+      - ./plugins:/plugins
+      # vault/02_wiki/topics 를 read-only 로 마운트 (수집 스크립트가 컨테이너 내부에서 읽을 때)
+      - ../../vault/02_wiki/topics:/import/topics:ro
+      - ../../vault/03_schema:/import/schema:ro
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:7474 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+# read-only 마운트 원칙 (CLAUDE.md §10 + plan §3.4-P5):
+# - vault 는 ingest 스크립트가 호스트에서 읽고 Bolt 로 push 하므로 컨테이너 마운트는 백업용
+# - vault 에 컨테이너가 쓰기 권한을 가지면 안 됨 (불변 원칙 위반 위험)

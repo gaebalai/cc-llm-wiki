@@ -54,7 +54,7 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 | `lint` | 10항목 검사 (slug·frontmatter·broken link·duplicate id 등) | 자동(weekly) | ✅ P2 |
 | `compile` | `_drafts/` → `topics/` 편찬 (lint 게이트 통과 시만) | 수동(`/compile`) | ✅ P3 |
 | `query` | local/graph 검색 라우터 | 자동 | P3~P5 |
-| `graph-sync` | wiki → Neo4j upsert | 자동(post-compile) | P5 |
+| `graph-sync` | wiki → Neo4j upsert (큐/단일 모드) | 자동(post-compile) / 수동(`/graph-sync`) | ✅ P5 |
 | `daily-digest` | 위키 기반 매일 5건 Slack 투고 | 수동(routine만) | P4 |
 | `publish` | 다국어 HTML → Cloudflare Pages | 수동 | P4 |
 | `morning-brief` | drafts·overdue 요약 | 자동(아침 인사 hook) | P3 |
@@ -128,15 +128,26 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 
 ---
 
-## §10. Graph Layer (Neo4j) — P5 이후 활성
+## §10. Graph Layer (Neo4j) — ✅ P5 골격 active
 
-스키마:
-- 노드 라벨: `Concept` · `Entity` · `Source` · `Person` · `Company` · `Challenge` · `Solution` · `Technology`
-- 관계 타입: `REFERS_TO` · `CONTRADICTS` · `MENTIONS` · `SOLVES` · `USES`
-- 엔티티 정규화: `canonical_name` + `aliases[]` (11번 문서 패턴)
-- 동기: wiki 편집 시 `PostToolUse` hook이 `.claude/queue/graph.txt`에 append
-       → `sleep-maintenance` routine(03:00 KST)이 일괄 upsert
-- 질의: **자연어 → Cypher 생성 금지**. `services/graph/templates/`의 고정 Cypher만 사용
+스키마 (활성):
+- 노드 라벨 (6종 고정): `Source` · `Person` · `Company` · `Technology` · `Challenge` · `Solution`
+- 관계 타입 (5종): `REFERS_TO` · `CONTRADICTS` · `MENTIONS` · `SOLVES` · `USES`
+- 엔티티 정규화: `vault/03_schema/aliases.yaml` (canonical_name + aliases, 14 entries 초기값)
+- 동기 경로: wiki 편집 → (P5 후속) `PostToolUse` hook 이 `.claude/queue/graph.txt` 적재
+            → `sleep-maintenance` routine 또는 사용자 `/graph-sync` 호출
+- 질의: **자연어 → Cypher 생성 금지**. `services/graph/templates/*.cypher` 만 사용 (3 템플릿: causal_path, concept_neighbors, orphan_audit)
+
+자산:
+- `infra/neo4j/docker-compose.yml` — Neo4j 5.18.1 + APOC, read-only vault 마운트
+- `services/graph/ingest_graph.py` — frontmatter id → metadata.id 고정, DRY_RUN 지원
+- `services/graph/query_graph.py` — 템플릿 + 파라미터, DRY_RUN 지원
+- `.claude/skills/graph-sync/SKILL.md` — 6-step 동기 절차
+
+활성화 조건:
+1. `docker compose -f infra/neo4j/docker-compose.yml up -d`
+2. `.env` 의 `NEO4J_PASSWORD` 채우기
+3. `pip install neo4j` (선택, dry-run 만 쓸 거면 불필요)
 
 ---
 
