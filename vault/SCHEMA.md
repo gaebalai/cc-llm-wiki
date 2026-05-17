@@ -52,15 +52,38 @@ graph_synced_at: null | <ISO8601>      # graph-sync 성공 시 갱신
 
 ---
 
-## 5. lint 규칙 (P2부터 본격 적용)
+## 5. lint 규칙 (P2 이후 활성, 10항목)
 
-- enum 위반(`type`·`status`·`locale`) → 에러
-- `sources` 빈 배열 → 에러 (topic/digest)
-- wikilink 끊김(존재하지 않는 slug 참조) → 에러
-- 고립 페이지(아무도 링크하지 않음) → 경고
-- stale 페이지(`updated_at`이 90일 이상 + sources의 raw가 갱신됨) → 경고
-- 슬러그에 반각 공백·대문자·이모지 → 에러
-- duplicate `id` → 에러 (4층 공유 키 충돌)
+검사 대상과 항목은 `.claude/skills/lint/SKILL.md` 의 "검사 항목" 표를 진실의 소스로 한다.
+SCHEMA는 **무엇을 위반으로 볼지의 정의**, SKILL은 **어떻게 검사할지의 절차**.
+
+### 위반 정의
+
+| 위반 | 심각도 | 정의 |
+|---|---|---|
+| frontmatter 필수 키 누락 | ERROR | `id`·`type`·`status`·`locale`·`sources`·`updated_at` 중 1개라도 없음 |
+| `type` enum 위반 | ERROR | `topic`·`decision`·`self`·`digest` 외 값 |
+| `status` enum 위반 | ERROR | `draft`·`reviewed`·`published` 외 값 |
+| `sources` 빈 배열 | ERROR | `type` 가 `topic`·`digest` 인데 sources 길이 0 |
+| wikilink 끊김 | ERROR | `[[slug]]` 가 가리키는 `.md` 파일 없음 |
+| └ draft 강등 | WARN-DRAFT | 위 위반이 `vault/02_wiki/_drafts/` 내부에만 있을 때 — 의도된 미작성 허용. **승급(`topics/` 이동) 시 ERROR 로 격상** |
+| duplicate `id` | ERROR | 4층 공유 키 충돌 (Neo4j·Kagura ID 일관성 깨짐) |
+| wiki 슬러그 규칙 | ERROR | `vault/02_wiki/` 하위 파일명이 `^[a-z0-9-]+\.md$` 불일치 (반각공백·대문자·이모지·한글 금지) |
+| raw 슬러그 규칙 | ERROR | `vault/01_raw/` 하위 파일명이 `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$` 불일치 |
+| orphan | WARN | 어떤 wikilink로도 참조되지 않음. **단 `_drafts/`·`digests/`·`self/`는 orphan 정상 폴더로 제외** |
+| stale | WARN | `updated_at` 90일 이상 + `sources` 의 raw 파일 mtime이 더 최근 |
+
+### 자동 수정 금지
+
+lint는 **보고만** 한다. 검출된 ERROR/WARN을 LLM이 자동 리네임·삭제·수정하지 않는다.
+사람이 리포트(`vault/02_wiki/_lint/YYYY-MM-DD.md`)를 읽고 결정한다.
+
+### 예외 처리 절차
+
+규칙에 맞지 않는 파일을 의도적으로 보존해야 한다면(예: 사용자 임시 자료):
+1. 본 §5에 명시적 예외 1줄 추가 (PR 본문에 이유 기록)
+2. 또는 해당 파일을 lint 대상 외 위치로 이동 (예: `vault/00_inbox/`)
+3. lint Skill 코드에 `.lintignore` 같은 우회 메커니즘은 **만들지 않는다** — 예외는 SCHEMA 변경으로만
 
 ---
 

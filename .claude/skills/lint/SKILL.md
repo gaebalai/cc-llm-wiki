@@ -26,10 +26,23 @@ allowed-tools:
 ## 절대 금지
 
 - 검출된 문제를 **자동 수정하지 말 것**. 리포트만 작성 (사람이 결정)
-- raw/ 검사 안 함 (raw는 lint 대상이 아님)
-- self/도 검사하되 리포트 본문에는 파일명만 노출, 본문 인용은 절대 금지
+- raw 파일의 **본문**은 읽지 않음 — 파일명 검사만 (SCHEMA §3 명명 규칙)
+- self/ 페이지는 frontmatter만 검사. 리포트 본문에 self/ 본문 인용 절대 금지
 
-## 검사 항목 (8가지)
+## 검사 대상
+
+| 폴더 | 무엇을 검사 | 비고 |
+|---|---|---|
+| `vault/02_wiki/topics/` | frontmatter + 본문(wikilink) | 전체 |
+| `vault/02_wiki/decisions/` | frontmatter + 본문(wikilink) | 전체 |
+| `vault/02_wiki/digests/` | frontmatter + 본문(wikilink) | 전체 |
+| `vault/02_wiki/_drafts/` | frontmatter + 본문(wikilink) | **포함**(승급 전 사전 검출) |
+| `vault/02_wiki/self/` | frontmatter만 | 본문 인용 금지 |
+| `vault/01_raw/**/*.md` | **파일명 슬러그 규칙만** | 본문 미열람 (원전 보호) |
+
+`path?` 인자로 특정 폴더 한정 가능.
+
+## 검사 항목 (10가지)
 
 | # | 항목 | 심각도 | 검출 방법 |
 |---|---|---|---|
@@ -37,17 +50,18 @@ allowed-tools:
 | 2 | `type` enum 위반 (topic/decision/self/digest 외) | ERROR | enum 매칭 |
 | 3 | `status` enum 위반 (draft/reviewed/published 외) | ERROR | enum 매칭 |
 | 4 | `sources` 빈 배열 (topic·digest만) | ERROR | 배열 길이 0 |
-| 5 | wikilink 끊김 (참조한 slug가 존재하지 않음) | ERROR | `[[...]]` 추출 후 파일 존재 확인 |
+| 5 | wikilink 끊김 (참조한 slug가 존재하지 않음) | ERROR | `[[...]]` 추출 후 파일 존재 확인 (단, `_drafts/`의 끊긴 링크는 **WARN-DRAFT** 로 강등 — 의도된 미작성일 수 있음) |
 | 6 | duplicate `id` (4층 공유 키 충돌) | ERROR | 전체 id 수집 후 중복 검사 |
-| 7 | 슬러그에 반각공백·대문자·이모지 | ERROR | 파일명 regex `^[a-z0-9-]+\.md$` 검사 |
-| 8 | orphan 페이지 (어디서도 링크되지 않음) | WARN | 전체 wikilink 그래프 빌드 후 in-degree 0 |
-| 9 | stale (updated_at이 90일 이상 + sources의 raw가 더 최근) | WARN | mtime 비교 |
+| 7 | wiki 슬러그 규칙 위반 (`vault/02_wiki/` 하위 `.md`) | ERROR | 파일명 regex `^[a-z0-9-]+\.md$` 검사 (단, `YYYY-MM-DD-` 접두는 권장) |
+| 8 | **raw 슬러그 규칙 위반** (`vault/01_raw/` 하위 `.md`) | ERROR | 파일명 regex `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$` (SCHEMA §3) |
+| 9 | orphan 페이지 (어디서도 링크되지 않음) | WARN | 전체 wikilink 그래프 빌드 후 in-degree 0 (단, `_drafts/`·`digests/`·`self/`는 orphan 정상 — 제외) |
+| 10 | stale (updated_at이 90일 이상 + sources의 raw가 더 최근) | WARN | mtime 비교 |
 
 ## 절차
 
 ### Step 1. 스코프 결정
-- `path?`가 있으면 그 폴더만, 없으면 `vault/02_wiki/{topics,decisions,digests,self}/` 전체
-- `Glob`으로 대상 `.md` 파일 목록 수집
+- `path?`가 있으면 그 폴더만, 없으면 위 "검사 대상" 표의 전체 폴더 사용
+- `Glob`으로 wiki 대상 `.md` 목록 수집 + `find vault/01_raw -name '*.md'`로 raw 파일명 목록 별도 수집
 
 ### Step 2. 메타 추출
 - 각 파일에서 frontmatter YAML 블록만 Read (앞 50줄로 충분)
@@ -110,9 +124,9 @@ allowed-tools:
 
 ```
 사용자: /lint
-Claude: [Step 1] 검사 대상 0개 (P0 시점 — wiki 비어 있음)
-        [Step 5] 리포트: vault/02_wiki/_lint/2026-05-17.md
-        ERROR 0건, WARN 0건. 첫 ingest 후 다시 실행하세요.
+Claude: [Step 1] 검사 대상: wiki .md = N, raw .md = M
+        [Step 5] 리포트: vault/02_wiki/_lint/YYYY-MM-DD.md
+        ERROR n건, WARN n건. 자세한 내용은 리포트 참조.
 ```
 
-P0 시점에는 wiki가 비어 있어 항상 0건이지만, 파이프라인 동작은 검증된다.
+P0 직후에는 모두 0건이지만, P1 이후 draft·raw가 들어오면 SCHEMA §3·§5 위반을 실시간 검출한다.
