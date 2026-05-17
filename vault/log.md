@@ -15,3 +15,4 @@
 ## 진입
 
 - 2026-05-17T17:30:00+09:00 | [scaffold] | human | P0 스캐폴드 생성 | CLAUDE.md vault/ .claude/
+- 2026-05-17T17:48:00+09:00 | [ingest] | cc-session | draft 생성 (사용자 승인) | vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md -> vault/02_wiki/_drafts/2026-05-17-graphrag-poc-with-neo4j.md
