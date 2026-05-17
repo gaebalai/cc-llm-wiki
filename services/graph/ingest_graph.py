@@ -181,12 +181,16 @@ def build_graph_for_topic(md_path: Path, lookup: dict[str, tuple[str, str]]) -> 
     fm, body = parse_frontmatter(text)
 
     source_id = fm.get("id") or md_path.stem
+    try:
+        rel_path = str(md_path.relative_to(REPO_ROOT))
+    except ValueError:
+        rel_path = str(md_path)  # 외부 vault (사용자 환경) path 도 허용
     source_node = Node(
         id=source_id,
         label="Source",
         canonical_name=fm.get("id", md_path.stem),
         props={
-            "path": str(md_path.relative_to(REPO_ROOT)),
+            "path": rel_path,
             "type": fm.get("type"),
             "status": fm.get("status"),
             "locale": fm.get("locale"),
@@ -263,7 +267,7 @@ def main() -> int:
     if not args.path and not args.all:
         parser.error("path 또는 --all 필요")
 
-    env = {**os.environ, **load_env(REPO_ROOT / args.env)}
+    env = {**load_env(REPO_ROOT / args.env), **os.environ}
     dry_run = args.dry_run or env.get("DRY_RUN", "0").strip() in ("1", "true", "yes")
 
     aliases = load_aliases(ALIASES_YAML)

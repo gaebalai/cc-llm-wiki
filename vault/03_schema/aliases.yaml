@@ -49,6 +49,23 @@ aliases:
     type: Company
     aliases: ["openai", "오픈AI", "오픈에이아이", "Open AI"]
 
+  # ── Company (한국 Claude Code 기업교육 시장, 2026-05) ──
+  - canonical: 한국AI교육진흥원
+    type: Company
+    aliases: ["ai-campus.kr", "한국AI교육진흥원", "AI Campus Korea", "한국AI교육"]
+
+  - canonical: 바이브코딩
+    type: Company
+    aliases: ["aivibecoding.kr", "바이브코딩", "AI Vibecoding", "vibe coding"]
+
+  - canonical: VRL
+    type: Company
+    aliases: ["vrl.co.kr", "VRL", "브이알엘"]
+
+  - canonical: gobigbuja
+    type: Company
+    aliases: ["gobigbuja", "고빅부자"]
+
   # ── Person ──
   - canonical: Andrej Karpathy
     type: Person

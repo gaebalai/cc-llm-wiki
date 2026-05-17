@@ -6,7 +6,7 @@
 [![CI](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Plugin: Claude Code](https://img.shields.io/badge/Plugin-Claude_Code-blue)](https://github.com/gaebalai/cc-llm-wiki)
-[![Version](https://img.shields.io/badge/version-0.3.7-green)](https://github.com/gaebalai/cc-llm-wiki/releases)
+[![Version](https://img.shields.io/badge/version-0.3.8-green)](https://github.com/gaebalai/cc-llm-wiki/releases)
 
 ## 무엇
 

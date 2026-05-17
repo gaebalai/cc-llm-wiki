@@ -106,7 +106,7 @@ def main() -> int:
     if not args.template:
         parser.error("템플릿 이름 또는 --list 필요")
 
-    env = {**os.environ, **load_env(REPO_ROOT / args.env)}
+    env = {**load_env(REPO_ROOT / args.env), **os.environ}
     dry_run = args.dry_run or env.get("DRY_RUN", "0").strip() in ("1", "true", "yes")
 
     cypher = load_template(args.template)

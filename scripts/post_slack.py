@@ -56,7 +56,7 @@ def main() -> int:
     parser.add_argument("--env", default=".env", help="환경 변수 파일 경로")
     args = parser.parse_args()
 
-    env = {**os.environ, **load_env(Path(args.env))}
+    env = {**load_env(Path(args.env)), **os.environ}
     webhook = env.get("SLACK_WEBHOOK_URL", "").strip()
     dry_run = env.get("DRY_RUN", "1").strip() in ("1", "true", "yes")
 
