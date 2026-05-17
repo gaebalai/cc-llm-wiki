@@ -68,22 +68,49 @@ claude
 - `/install` 명령이 슬래시 자동완성에 나타남
 - `/install --check` 실행 시 7 단계 검사 메시지 출력
 
-## 4. 업데이트 게시
+## 4. 업데이트 게시 (v0.4.4+ 표준 절차)
 
 ```bash
-# 변경 작업 후
-$EDITOR .claude-plugin/{plugin,marketplace}.json  # version 두 곳 모두 bump
+# 1) 변경 작업 (Skill·service·docs 등)
 
-git add -A
-git commit -m "[release] 0.2.0: <변경 요약>"
-git tag v0.2.0 -m "release: 0.2.0 — ..."
-git push origin main --tags
+# 2) 버전 bump (3 곳 sync — CI 항목 2 가 교차참조 검증)
+$EDITOR .claude-plugin/plugin.json          # .version
+$EDITOR .claude-plugin/marketplace.json     # .metadata.version + .plugins[0].version
+
+# 3) CHANGELOG.md 의 [Unreleased] 섹션을 새 버전 섹션으로 변환
+$EDITOR CHANGELOG.md
+# 형식: ## [0.4.5] — YYYY-MM-DD
+#       ### Added / Changed / Fixed / Removed (해당 항목만)
+
+# 4) commit + push (CI 자동 실행, ~10 초)
+git add CHANGELOG.md .claude-plugin/plugin.json .claude-plugin/marketplace.json <변경 파일>
+git commit -m "[release] v0.4.5 — <한 줄 요약>"
+git push origin main
+
+# 5) tag + push
+git tag -a v0.4.5 -m "v0.4.5 — <한 줄 요약>"
+git push origin v0.4.5
+
+# 6) GitHub Release 생성 (CHANGELOG 섹션을 notes 로)
+gh release create v0.4.5 \
+  --title "v0.4.5 — <한 줄 요약>" \
+  --notes "$(awk '/^## \[0\.4\.5\]/{found=1; print; next} found && /^## \[/{exit} found' CHANGELOG.md)"
+
+# (참고) release 가 published 시간 순으로 Latest 잡혀 의도와 다를 수 있음 → 강제 지정
+gh release edit v0.4.5 --latest
 ```
 
 사용자는:
 ```
 /plugin update cc-llm-wiki@claudecode-to-marketplace
 ```
+
+### 검증 체크리스트 (push 직전)
+
+- [ ] `jq -r '.version' .claude-plugin/plugin.json` 과 `.plugins[0].version` `.metadata.version` (marketplace) 셋 다 동일
+- [ ] `CHANGELOG.md` 에 새 버전 섹션 추가 (Keep a Changelog 1.1.0 형식)
+- [ ] `git ls-files | xargs grep -lE 'xox[abeops]-|sk-[a-zA-Z0-9_-]{30,}' 2>/dev/null` → 결과 비어있음
+- [ ] CI 통과 (직전 push 의 `gh run list --branch main --limit 1` → `completed success`)
 
 ## 5. marketplace 등록 (선택)
 
@@ -94,16 +121,29 @@ Anthropic 공식 디렉터리에 등록하려면 별도 절차 필요 (현재 �
 ## 6. push 후 추가 권장 사항
 
 - GitHub repo Settings:
-  - Topics 추가: `claude-code`, `obsidian`, `neo4j`, `graphrag`, `pkm`, `knowledge-base`
+  - Topics 12 종 (v0.3.10): `anthropic-claude` · `claude-code` · `obsidian` · `neo4j` · `graphrag` · `langchain` · `knowledge-base` · `personal-knowledge-management` · `llm-wiki` · `karpathy` · `context-engineering` · `pkm`
   - About: 한 줄 소개 + plugin marketplace URL
   - Pages: 비활성 (로컬 전용 정책 그대로)
-- GitHub Actions (선택, 향후):
-  - JSON 유효성 검사 (marketplace.json/plugin.json)
-  - SKILL.md frontmatter 검증
-  - install.sh shellcheck
+- **GitHub Actions** (✅ v0.3.7+ active — `.github/workflows/ci.yml` 10 항목):
+  1. JSON 유효성 (marketplace·plugin·settings)
+  2. plugin ↔ marketplace 교차참조 (name·version)
+  3. SKILL.md frontmatter 필수 키
+  4. Bash syntax (install.sh)
+  5. Python compile (ingest_graph·query_graph·post_slack)
+  6. install.sh --check step 1
+  7. vault lint 10 규칙 (frontmatter·enum·wikilink·duplicate id 등)
+  8. 시크릿 패턴 grep (xox/sk-/bot)
+  9. .env gitignore 보호
+  10. extraction eval rule vs gold (P/R/F1)
 
-## 7. 미해결 항목
+## 7. 미해결 항목 (역사 기록)
 
-- plugin 활성 시 settings.json 의 hooks (raw 보호 등) 가 사용자 환경에 자동 로드되지 않음.
-  `/install` 명령이 사용자 `.claude/settings.json` 에 hooks 를 머지하는 흐름을 추가 필요 (다음 release)
-- plugin 디렉터리에서 `/install` 실행 시 vault/ 가 plugin 내부에 생성되는 동작 — 사용자 cwd 기준으로 셋업되도록 install.sh 조정 필요
+원래 두 항목은 v0.2.0 의 `install.sh` 패치로 해결됨:
+
+- ~~plugin 활성 시 settings.json hooks 가 자동 로드 안 됨~~ → ✅ v0.2.0: `install.sh merge_hooks()` 가 사용자 `.claude/settings.json` 에 안전 머지
+- ~~plugin 디렉터리에서 `/install` 실행 시 vault/ 가 plugin 내부에 생성~~ → ✅ v0.2.0: `PLUGIN_INSTALL` 환경변수 자동 감지, 사용자 cwd 가 TARGET_DIR
+
+### 현재 알려진 한계
+
+- **5 routines 의 cron 등록은 사용자 환경마다 1 회 수동** (`/schedule create`). plugin install 시 자동 등록 안 됨 (Claude Code Plugin spec 에 routine schedule 자동 등록 hook 없음)
+- **GitHub Releases 누락 위험**: v0.3.3~v0.4.3 가 release 누락된 채 12 release 가 누적되었던 사례 (v0.4.4 에 일괄 backfill). §4 의 6 번 단계 (gh release create) 를 매 release 마다 빠뜨리지 말 것.

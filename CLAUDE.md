@@ -61,12 +61,13 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 | `compile` | `_drafts/` → `topics/` 편찬 (lint 게이트 통과 시만) | 수동(`/compile`) | ✅ P3 |
 | `query` | local Grep / graph Cypher 라우터 (자연어 → Cypher 자동 생성 금지) | 자동(인사 trigger) | ✅ v0.3.0 |
 | `graph-sync` | wiki → Neo4j upsert (큐/단일 모드) | 자동(post-compile) / 수동(`/graph-sync`) | ✅ P5 |
-| `daily-digest` | 위키 기반 매일 외부 자료 5건 수집 (positioning.md 의존, Slack 옵션) | 수동(routine만) | ✅ v0.3.0 (positioning.md 작성 시 활성) |
+| `daily-digest` | 위키 기반 매일 외부 자료 5건 수집 (positioning.md 의존, Slack 옵션) | 수동(routine만) | ✅ v0.4.3 본체 (runner + 5 쿼리 자동 설계) — positioning.md 작성 시 활성 |
 | `morning-brief` | drafts·overdue·신규 raw·lint 미해결 한 화면 요약 | 자동(아침 인사 hook) / 수동 | ✅ v0.3.0 |
 | `evening-reflect` | 세션 종료 시 모순 검사 (decisions 덮어쓰기·CONTRADICTS·self 노출 등) | Stop hook (수동 trigger 권장) | ✅ v0.3.0 |
 
-v0.3.0 시점 활성 Skill: 8 종 (전부). `compile`/`daily-digest`/`evening-reflect` 는 `disable-model-invocation: true` (Routine·명시 호출만).
-대시보드는 `vault/dashboards/status.md` (Obsidian Dataview 플러그인 필요).
+v0.4.4 시점 활성 Skill: 8 종 (전부, v0.3.0 카탈로그 완성 후 v0.4.x 에서 본체 강화). `compile`/`daily-digest`/`evening-reflect` 는 `disable-model-invocation: true` (Routine·명시 호출만).
+v0.4.x 본체 강화: `daily-digest` (v0.4.3 runner 본체) · `graph-sync` 의 LLM 추출 추가 (v0.4.0 `services/graph/ingest_llm.py`).
+대시보드는 `vault/dashboards/status.md` — Dataview 10 쿼리 (Obsidian Dataview 플러그인 필요).
 
 **범위 결정 (2026-05-17)**: 본 vault 는 **로컬 전용**. 외부 공개·다국어 HTML 발행은 하지 않는다.
 따라서 `publish` Skill·Cloudflare Pages·`dist/` 자산은 본 환경에서 **삭제됨**(7번 docs 의 풀스택 제안 중 외부 발신 라인만 제외).

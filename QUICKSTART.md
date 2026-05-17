@@ -11,7 +11,7 @@
 **Claude Code 안에서 도는 개인 지식 베이스**입니다.
 
 - Obsidian vault 안의 markdown 파일들을 **3 층**으로 격리: `01_raw/`(원전 보존) → `02_wiki/`(LLM 편찬) → 스키마
-- Claude Code가 **사서 역할**: ingest(자료 가져오기) / compile(편찬) / lint(검사) / graph-sync(Neo4j 동기)
+- Claude Code가 **사서 역할**: 8 Skills — `ingest`(자료 가져오기) / `compile`(편찬) / `lint`(검사) / `query`(local·graph 라우터) / `graph-sync`(Neo4j 동기) / `morning-brief`(아침 요약) / `evening-reflect`(세션 모순 검사) / `daily-digest`(외부 자료 수집)
 - **로컬 전용** — 외부 공개·발신 없음 (필요해지면 별도 PR 로 복원)
 - 자료가 쌓일수록 **복리로 성장**하는 지식 그래프
 
@@ -182,8 +182,12 @@ Docker Neo4j 가 떠 있고 `pip install neo4j` 끝났다면:
 | `/lint` | 전체 vault 정합성 검사 |
 | `/lint <path>` | 특정 폴더만 검사 |
 | `/compile <draft_path>` | draft → topics 승급 (lint 게이트) |
+| `/query <question>` | local Grep (기본) 또는 graph Cypher 라우팅 |
 | `/graph-sync <topic_path>` | 단일 topic 그래프 동기 |
 | `/graph-sync --queue` | hook 큐 일괄 동기 |
+| `/morning-brief` | drafts·overdue·신규 raw·lint 미해결 한 화면 요약 (아침 인사 자동 trigger 도 가능) |
+| `/evening-reflect` | 세션 종료 시 모순 검사 (Stop hook 자동, 수동도 가능) |
+| `/daily-digest` | positioning.md 기반 5 쿼리 외부 자료 수집 (routine 권장) |
 
 ### Bash 명령 (Claude Code 밖)
 
@@ -206,13 +210,16 @@ docker compose -f infra/neo4j/docker-compose.yml down  # 종료
 
 ## 5. 일주일 운영 사이클
 
-| 시점 | 일 | 활성 routine |
+| 시점 | 일 | 상태 |
 |---|---|---|
 | 매일 (수동) | raw 1~3 건 ingest → draft 검토 → compile | — |
-| 매시 (자동, 활성화 시) | `wiki-ingest-sweep` — raw 신규 감지 | — |
-| 일 06:00 KST | `weekly-lint` 자동 실행 → 리포트 PR | ✅ active |
-| 일 21:00 KST | `weekly-review` 슬롯 알림 | ✅ active |
-| (매일 07:00, dry-run) | `daily-digest` | ⏸ Skill 본체 미작성 |
+| 매시 정각 KST | `wiki-ingest-sweep` — raw 신규 감지, 알림만 (자동 ingest 금지) | ✅ active (v0.3.9) |
+| 매일 03:00 KST | `sleep-maintenance` — graph-sync --queue + orphan_audit + aliases-candidates | ✅ active (v0.3.9) |
+| 매일 07:00 KST | `daily-digest` — `positioning.md` 기반 5 쿼리 WebSearch → digests/YYYY-MM-DD.md (Slack 옵션) | ✅ active (v0.4.3) |
+| 일 06:00 KST | `weekly-lint` — vault 전체 정합성 검사 → `auto-lint/YYYY-WW` PR | ✅ active |
+| 일 21:00 KST | `weekly-review` 슬롯 알림 (사람 회고용, 자동 처리 없음) | ✅ active |
+
+⚠ 모든 routine 은 `.claude/routines/*.md` 에 명세만 있고, 실제 cron 등록은 `/schedule create` 로 별도 수행 (사용자 환경마다 1 회).
 
 회고 시: `vault/02_wiki/self/llm-wiki-origins.md` 의 "회고 메모" 섹션에 timestamp 와 함께 1~3 줄 append.
 
