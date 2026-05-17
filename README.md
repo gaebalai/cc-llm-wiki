@@ -121,7 +121,6 @@ cc-llm-wiki/
 - `self/` 폴더 내용을 graph·digest·MCP·query 응답에 노출
 - 쓰기 Skill 의 모델 자동 호출 (Routine·명시 명령만)
 - raw/ 직접 편집·자동 정리 (Hook 이 exit 2 로 차단)
-- Kagura MCP (P6 옵션 — 4 주 자생 검증 후 결정)
 
 ## Plugin 으로 사용
 

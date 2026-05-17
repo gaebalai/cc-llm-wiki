@@ -228,7 +228,6 @@ python3 services/graph/query_graph.py causal_path \
 |---|---|
 | **외부 공개·다국어 HTML 발행** (Cloudflare Pages 등) | 로컬 전용 정책 — 외부 발신 의도 없음 |
 | **자연어 → Cypher LLM 생성** | 비결정적 쿼리는 신뢰도 0. 고정 템플릿이 안전 |
-| **Kagura MCP** (BM25+Qdrant+Hebbian 3중 인덱스) | 외부 의존 늘리기 전 4 주 자생 검증 후 결정 |
 | **morning/evening hook 자동 호출** | Hook 폭주 위험. 명시적 매칭만 |
 | **raw 자동 정리** | 사람이 메타-only 1 회 정리는 허용 (SCHEMA §6), 그 외 절대 불변 |
 

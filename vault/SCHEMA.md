@@ -67,7 +67,7 @@ SCHEMA는 **무엇을 위반으로 볼지의 정의**, SKILL은 **어떻게 검�
 | `sources` 빈 배열 | ERROR | `type` 가 `topic`·`digest` 인데 sources 길이 0 |
 | wikilink 끊김 | ERROR | `[[slug]]` 가 가리키는 `.md` 파일 없음 |
 | └ draft 강등 | WARN-DRAFT | 위 위반이 `vault/02_wiki/_drafts/` 내부에만 있을 때 — 의도된 미작성 허용. **승급(`topics/` 이동) 시 ERROR 로 격상** |
-| duplicate `id` | ERROR | 4층 공유 키 충돌 (Neo4j·Kagura ID 일관성 깨짐) |
+| duplicate `id` | ERROR | wiki·Neo4j 2 층 공유 키 충돌 (그래프 동기 깨짐) |
 | wiki 슬러그 규칙 | ERROR | `vault/02_wiki/` 하위 파일명이 `^[a-z0-9-]+\.md$` 불일치 (반각공백·대문자·이모지·한글 금지) |
 | raw 슬러그 규칙 | ERROR | `vault/01_raw/` 하위 파일명이 `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$` 불일치 |
 | orphan | WARN | 어떤 wikilink로도 참조되지 않음. **단 `_drafts/`·`digests/`·`self/`는 orphan 정상 폴더로 제외** |

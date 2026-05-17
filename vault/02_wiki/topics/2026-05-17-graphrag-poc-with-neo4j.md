@@ -8,7 +8,7 @@ sources:
 related:
   - "[[entity-disambiguation-strategy]]"
   - "[[2do-brain-architecture]]"
-updated_at: 2026-05-17T18:50:00+09:00
+updated_at: 2026-05-18T02:30:00+09:00
 graph_synced_at: null
 ---
 
@@ -23,7 +23,7 @@ graph_synced_at: null
 ## 횡단적 지견
 
 - **[[entity-disambiguation-strategy]]와의 결합**: `canonical_name + aliases` 정규화 없이 그래프를 만들면 같은 회사가 노드 분열되어 인과 경로가 끊긴다. 그래프 품질의 90%가 정규화에서 결정됨.
-- **[[2do-brain-architecture]] 안에서의 위치**: 이 PoC는 L3a(Graph Layer). L3b(Kagura 인덱스)와 통합이 아니라 역할 분담 — 의미·키워드는 L3b, 다중-홉 관계는 L3a가 담당.
+- **[[2do-brain-architecture]] 안에서의 위치**: 이 PoC는 L3 Graph Layer. 의미·키워드 검색은 Obsidian Dataview + grep 으로 충족, 다중-홉 관계만 그래프가 담당.
 - **컨텍스트 위생 효과**: 그래프가 후보 노드 5~10개로 좁혀주면 raw 본문 직주입 없이도 답변이 만들어진다(4번 문서 Context Rot 회피의 실증 사례).
 
 ## 인용

@@ -85,7 +85,7 @@ P5 시점 활성 Skill: `ingest`, `lint`, `compile`, `graph-sync` (4종).
 
 ```yaml
 ---
-id: 2026-05-17T142530-twinkling-lemon   # 불변, Neo4j metadata.id·Kagura doc_id로 공유
+id: 2026-05-17T142530-twinkling-lemon   # 불변, Neo4j metadata.id 와 공유
 type: topic | self | decision | digest  # 4종 (lint가 enum 검증)
 status: draft | reviewed | published     # published 는 본 vault 에서 "사람이 최종 확정" 의미 (외부 발행 아님)
 locale: ko                              # 다국어 파생은 사용 안 함 (로컬 전용)
@@ -98,7 +98,7 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 ---
 ```
 
-핵심: `id`는 한 번 정해지면 절대 변경 금지. wiki·Neo4j·Kagura 3층을 묶는 키.
+핵심: `id`는 한 번 정해지면 절대 변경 금지. wiki·Neo4j 2 층을 묶는 키.
 
 ---
 
@@ -162,7 +162,6 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | `github` | P0 | `gh auth login` |
 | `slack` | P4 옵션 | `SLACK_BOT_TOKEN` (혼자 알림 채널 또는 미사용. 없으면 dry-run) |
 | `neo4j-cypher` | P5 | `NEO4J_URI/USER/PASS` |
-| `kagura-memory` | P6 옵션 | `claude mcp add` |
 
 **Routines** (`.claude/routines/`):
 | 이름 | cron(KST) | 상태 | 비고 |

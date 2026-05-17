@@ -42,7 +42,7 @@ Karpathy 원전 (2024-25)
         ├─ 6번 docs: self/decisions/synthesis 3 분리
         ├─ 7번 docs: 다국어 publish + Cloudflare      ← (전체 제거, 로컬 전용)
         ├─ 8번 docs: disable-model-invocation + allowed-tools 스코핑
-        ├─ 9번 docs: Kagura 3중 인덱스 + MCP            ← (P6 옵션, 4주 자생 후 결정)
+        ├─ 9번 docs: 3중 인덱스 + MCP                  ← (제외, 의도적으로 거름)
         ├─ 10번 docs: SCHEMA.md "사서 규율"
         └─ 11번 docs: Neo4j + LangChain GraphRAG PoC   ← (P5 골격)
 ```
@@ -68,7 +68,7 @@ Karpathy 원전 (2024-25)
 | 출처 | 무엇을 | 이유 |
 |---|---|---|
 | 7 docs | 다국어 자동 publish, Cloudflare Pages | **로컬 전용** 결정 (2026-05-17). 외부 공개 의도 없음 |
-| 9 docs | Kagura MCP (BM25+Qdrant+Hebbian) | 외부 의존 늘리기 전 4주 자생 검증. P6+ 옵션 |
+| 9 docs | 외부 MCP 인덱스 (BM25+벡터+그래프 인덱스) | 의도적으로 제외 — 외부 의존 늘리지 않음 |
 | 5 docs | morning-digest-recap (Slack 리액션 수집) | Slack 의존 + 운영 부담. daily-digest 안정 후 결정 |
 | 6 docs | morning/evening hook 자동 호출 | Hook 폭주 위험. 명시적 인사 매칭만 settings.json 에 (미구현) |
 | Karpathy 원전 | "전체 vault 매번 LLM 통째 입력" 권유 부분 | 4 docs Context Rot 와 모순. JIT 진입점으로 대체 |
@@ -79,7 +79,6 @@ Karpathy 원전 (2024-25)
 |---|---|
 | `daily-digest` Skill 본체 작성 | positioning.md 작성 후 |
 | `publish` 복원 | 외부 공개 의도가 생기는 시점 (현재 없음) |
-| Kagura MCP 등록 | 4주 운영 후 검색 한계가 진짜 느껴질 때 |
 | PostToolUse graph queue hook | P5 보완 (이번 P6 에서 처리) |
 | morning/evening hook 자동화 | 1개월 운영 후 패턴이 보일 때 |
 
@@ -89,7 +88,7 @@ Karpathy 원전 (2024-25)
 > 운영 중 "이 결정이 정말 옳았나" 를 발견하면 본 페이지에 timestamp 와 함께 append.
 
 - 2026-05-17 — **raw 불변 완전 금지는 비현실적**. 원전이 메타 노이즈(SEO 후보·번역 노트·이미지 자리 표시) 로 오염된 채 ingest 되면 wiki 본문의 인용도 같이 오염된다. → **SCHEMA §6 신설**: 사람의 1 회 정리 허용 (메타-only, 본문 의미 무변경, 트레일러 marker + `[raw-clean]` commit). 첫 적용: `vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md`.
-- (예시) 2026-06-XX — Kagura 없이도 topics 50건까지는 grep + Dataview 로 충분. 4주 검증 결과
+- (예시) 2026-06-XX — topics 50건까지는 grep + Dataview 로 충분. 외부 인덱스 불필요 확인
 - (예시) 2026-06-XX — Slack 통지 한 번도 안 봄. daily-digest routine 자체를 비활성 검토
 
 ## 외부에 묻고 싶다면

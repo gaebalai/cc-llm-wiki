@@ -104,4 +104,4 @@ Claude: [Step 1] 큐에 3건. status 검증 후 3건 모두 통과.
 
 - 큐 채우기는 `.claude/settings.json` 의 PostToolUse hook (P5 후속 작업)
 - sleep-maintenance routine (P5+) 이 매일 03:00 KST `/graph-sync --queue` 호출
-- 자연어 검색은 `query` Skill (P3~P5) 이 의도 분류 후 `query_graph.py` 또는 Kagura 위임
+- 자연어 검색은 `query` Skill (P3~P5) 이 의도 분류 후 `query_graph.py` 에 위임
