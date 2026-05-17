@@ -73,7 +73,7 @@ WHERE length(file.outlinks) > 0
 ```
 
 Dataview의 `file.outlinks`는 미존재 링크도 그대로 표시합니다. 마우스로 hover했을 때 빨간색이면 broken.
-정확한 lint는 `.claude/skills/lint/` Skill 호출.
+정확한 lint는 `skills/lint/` Skill 호출.
 
 ## 6. lint 리포트 인덱스
 

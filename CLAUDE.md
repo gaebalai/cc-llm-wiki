@@ -145,7 +145,7 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 - `infra/neo4j/docker-compose.yml` — Neo4j 5.18.1 + APOC, read-only vault 마운트
 - `services/graph/ingest_graph.py` — frontmatter id → metadata.id 고정, DRY_RUN 지원
 - `services/graph/query_graph.py` — 템플릿 + 파라미터, DRY_RUN 지원
-- `.claude/skills/graph-sync/SKILL.md` — 6-step 동기 절차
+- `skills/graph-sync/SKILL.md` — 6-step 동기 절차
 
 활성화 조건:
 1. `docker compose -f infra/neo4j/docker-compose.yml up -d`

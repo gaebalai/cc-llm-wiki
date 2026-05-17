@@ -54,7 +54,7 @@ graph_synced_at: null | <ISO8601>      # graph-sync 성공 시 갱신
 
 ## 5. lint 규칙 (P2 이후 활성, 10항목)
 
-검사 대상과 항목은 `.claude/skills/lint/SKILL.md` 의 "검사 항목" 표를 진실의 소스로 한다.
+검사 대상과 항목은 `skills/lint/SKILL.md` 의 "검사 항목" 표를 진실의 소스로 한다.
 SCHEMA는 **무엇을 위반으로 볼지의 정의**, SKILL은 **어떻게 검사할지의 절차**.
 
 ### 위반 정의

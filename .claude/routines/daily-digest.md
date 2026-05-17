@@ -20,7 +20,7 @@ env_required: [SLACK_WEBHOOK_URL]
 - `daily-digest` Skill 본체 **미작성**. 본 routine 은 명세만 존재.
 - Slack 토큰 없음 → dry-run 으로만 동작.
 - 활성화 조건:
-  1. `.claude/skills/daily-digest/SKILL.md` 작성
+  1. `skills/daily-digest/SKILL.md` 작성
   2. `.env` 에 `SLACK_WEBHOOK_URL` 채우기
   3. `positioning.md` 작성 (사용자가 목표·관심사·금기 토픽 정의)
 

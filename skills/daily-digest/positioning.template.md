@@ -4,7 +4,7 @@
 **사용자가 직접 작성** — LLM 이 자동 수정하지 않습니다 (CLAUDE.md §3-⑤ 의 self 정신과 같음).
 
 ```bash
-cp .claude/skills/daily-digest/positioning.template.md vault/positioning.md
+cp skills/daily-digest/positioning.template.md vault/positioning.md
 $EDITOR vault/positioning.md
 ```
 

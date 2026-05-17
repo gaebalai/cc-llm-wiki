@@ -95,7 +95,7 @@ copy_templates() {
 
   # 핵심 디렉터리 (idempotent, 사용자 변경 보존: --ignore-existing on file-level OK,
   # 디렉터리 안 신규 파일은 추가)
-  for d in vault infra services scripts .claude/routines .claude/commands .claude/skills; do
+  for d in vault infra services scripts .claude/routines commands skills; do
     [ -d "$src/$d" ] || continue
     mkdir -p "$dst/$d"
     rsync -a --ignore-existing \

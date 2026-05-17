@@ -53,7 +53,7 @@ Slack Webhook 이 있으면 요약 통지.
 
 ### Step 1. 전제 조건 검증
 ```bash
-[ -f vault/positioning.md ] || abort "positioning.md 작성 필요. 템플릿: .claude/skills/daily-digest/positioning.template.md"
+[ -f vault/positioning.md ] || abort "positioning.md 작성 필요. 템플릿: skills/daily-digest/positioning.template.md"
 ```
 abort 시 사용자에게 템플릿 경로 안내.
 
