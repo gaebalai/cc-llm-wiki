@@ -31,3 +31,5 @@
 - 2026-05-17T19:40:00+09:00 | [scaffold] | cc-session | P5 GraphRAG PoC 골격: docker-compose, aliases.yaml(14 entries), ingest_graph.py, query_graph.py, Cypher 템플릿 3건, graph-sync SKILL | infra/neo4j/ services/graph/ vault/03_schema/aliases.yaml .claude/skills/graph-sync/
 - 2026-05-17T19:40:00+09:00 | [dry-run] | cc-session | ingest_graph.py --all --dry-run 검증 OK | sources=3 nodes=N rels=N (Neo4j 미연결, 추출만)
 - 2026-05-17T19:40:00+09:00 | [claude-md] | cc-session | §10 Graph Layer active 갱신, §4 graph-sync 활성 표기 | CLAUDE.md
+- 2026-05-17T20:00:00+09:00 | [scope-decision] | human | "공개 의도 없음, 로컬 전용" 결정. publish 라인 전체 제거 | .claude/routines/publish-multilang.md dist/ Cloudflare 키 §4 publish Skill §11 publish-multilang 행
+- 2026-05-17T20:00:00+09:00 | [cleanup] | cc-session | CLAUDE.md §3-⑤ self 노출 publish 제거, §6 frontmatter locale 주석 갱신, §7 브랜치 prefix publish 제거, §9 publish 실패 행 제거, §11 slack 옵션 표기 | CLAUDE.md README.md .env.example .gitignore

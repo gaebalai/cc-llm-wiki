@@ -40,8 +40,8 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 2. **재귀 요약 열화** — 이미 요약된 wiki를 또 요약해 새 wiki로 저장 금지
 3. **main 브랜치 직커밋** — 모든 자동 작업은 `auto-*/` 브랜치 + PR 패턴
 4. **자연어 → Cypher 자동 생성** — Neo4j 질의는 사전 정의된 고정 템플릿만
-5. **self/ 노출** — self/ 내용을 graph·index·publish·MCP에 절대 전달 금지
-6. **쓰기 Skill의 모델 자동 호출** — compile/publish/evening-reflect/daily-digest는
+5. **self/ 노출** — self/ 내용을 graph·index·MCP에 절대 전달 금지
+6. **쓰기 Skill의 모델 자동 호출** — compile/evening-reflect/daily-digest는
    `disable-model-invocation: true`. Routine 또는 명시적 `/skill-name`만 트리거
 
 ---
@@ -55,13 +55,16 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 | `compile` | `_drafts/` → `topics/` 편찬 (lint 게이트 통과 시만) | 수동(`/compile`) | ✅ P3 |
 | `query` | local/graph 검색 라우터 | 자동 | P3~P5 |
 | `graph-sync` | wiki → Neo4j upsert (큐/단일 모드) | 자동(post-compile) / 수동(`/graph-sync`) | ✅ P5 |
-| `daily-digest` | 위키 기반 매일 5건 Slack 투고 | 수동(routine만) | P4 |
-| `publish` | 다국어 HTML → Cloudflare Pages | 수동 | P4 |
+| `daily-digest` | 위키 기반 매일 외부 자료 5건 수집 (Slack 통지는 옵션) | 수동(routine만) | P4 |
 | `morning-brief` | drafts·overdue 요약 | 자동(아침 인사 hook) | P3 |
 | `evening-reflect` | 모순 검사 + log 정정 | 자동(Stop hook) | P3 |
 
-P3 시점 활성 Skill: `ingest`, `lint`, `compile` (3종).
+P5 시점 활성 Skill: `ingest`, `lint`, `compile`, `graph-sync` (4종).
 대시보드는 `vault/dashboards/status.md` (Obsidian Dataview 플러그인 필요).
+
+**범위 결정 (2026-05-17)**: 본 vault 는 **로컬 전용**. 외부 공개·다국어 HTML 발행은 하지 않는다.
+따라서 `publish` Skill·Cloudflare Pages·`dist/` 자산은 본 환경에서 **삭제됨**(7번 docs 의 풀스택 제안 중 외부 발신 라인만 제외).
+필요해지면 별도 PR 로 복원.
 
 ---
 
@@ -83,8 +86,8 @@ P3 시점 활성 Skill: `ingest`, `lint`, `compile` (3종).
 ---
 id: 2026-05-17T142530-twinkling-lemon   # 불변, Neo4j metadata.id·Kagura doc_id로 공유
 type: topic | self | decision | digest  # 4종 (lint가 enum 검증)
-status: draft | reviewed | published
-locale: ko                              # publish 시 ko→en→ja 파생
+status: draft | reviewed | published     # published 는 본 vault 에서 "사람이 최종 확정" 의미 (외부 발행 아님)
+locale: ko                              # 다국어 파생은 사용 안 함 (로컬 전용)
 sources:
   - vault/01_raw/articles/2026-05-17-source-a.md
 related:
@@ -100,7 +103,7 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 
 ## §7. Git/PR Convention
 
-- 브랜치: `auto-{ingest,digest,lint,publish,graph}/YYYY-MM-DDTHHMM-{slug}`
+- 브랜치: `auto-{ingest,digest,lint,graph}/YYYY-MM-DDTHHMM-{slug}`
 - 커밋: 한국어 1줄 요약 + 본문에 영향 범위. 모든 커밋에 Skill 이름 prefix(`[ingest] ...`)
 - PR: squash merge 강제. PR 제목 = 첫 커밋 제목
 - main 직커밋·force-push 절대 금지. Hook이 `git push.*main` 패턴을 차단
@@ -123,7 +126,6 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | raw 변조 시도 | Hook이 exit 2, 메시지 확인 | 작업 중단 |
 | wiki 모순 검출 (evening-reflect) | log.md에 정정 메모, 토론 모드 진입 | `git restore vault/02_wiki/<file>` |
 | Neo4j graph desync | 큐(`.claude/queue/graph.txt`) 비우고 `sleep-maintenance` 재실행 | `infra/neo4j/data/` 백업 복원 |
-| publish 실패 | wrangler 로그 확인, frontmatter `status` 되돌리기 | Cloudflare Pages 이전 배포 |
 | Slack 중복 투고 | `digests/YYYY-MM-DD.md` 키로 중복 배제 | digest 마크다운 git revert |
 
 ---
@@ -157,7 +159,7 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | 이름 | 등록 Phase | 인증 |
 |---|---|---|
 | `github` | P0 | `gh auth login` |
-| `slack` | P4 | `SLACK_BOT_TOKEN` |
+| `slack` | P4 옵션 | `SLACK_BOT_TOKEN` (혼자 알림 채널 또는 미사용. 없으면 dry-run) |
 | `neo4j-cypher` | P5 | `NEO4J_URI/USER/PASS` |
 | `kagura-memory` | P6 옵션 | `claude mcp add` |
 
@@ -167,7 +169,6 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 | `wiki-ingest-sweep` | `0 * * * *` | TBD | 명세 미작성 |
 | `weekly-lint` | `0 6 * * 0` | ✅ active | lint Skill 호출, dry-run Slack |
 | `daily-digest` | `0 7 * * *` | ⏸ dry-run | Skill 본체 미작성 |
-| `publish-multilang` | `0 9 * * *` | ⏸ dry-run | Skill 본체 미작성, Cloudflare 토큰 필요 |
 | `sleep-maintenance` | `0 3 * * *` | TBD | P5 진입 후 |
 | `morning-digest-recap` | `0 22 * * 1-5` | TBD | daily-digest 안정 후 |
 

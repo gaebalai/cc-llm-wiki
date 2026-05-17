@@ -5,11 +5,6 @@
 *.pem
 *.key
 
-# build outputs
-dist/
-!dist/i18n/
-!dist/i18n/**/.gitkeep
-
 # Obsidian local state
 vault/.obsidian/workspace*
 vault/.obsidian/cache
