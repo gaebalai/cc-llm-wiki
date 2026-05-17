@@ -94,24 +94,26 @@ jobs:
           errs = 0; warns = 0
           seen_ids = {}
           for p in vault.rglob("*.md"):
-              if "_lint" in str(p) or p.name.startswith("."): continue
+              ps = str(p)
+              # raw 본문 검사 안 함 (SCHEMA §5 항목 8 = WARN-RAW 만), lint 리포트 디렉터리 제외
+              if "_lint" in ps or "01_raw" in ps or p.name.startswith("."): continue
               text = p.read_text(encoding="utf-8")
               if not text.startswith("---\n"): continue
               end = text.find("\n---\n", 4)
               fm = text[4:end] if end > 0 else ""
               keys = dict(re.findall(r"^([a-z_]+):\s*(.*)$", fm, re.M))
-              # 필수 키
+              t = keys.get("type", "")
+              # dashboard, positioning 같은 비-편찬 타입은 frontmatter 필수키 면제
+              if t in ("dashboard", "positioning"):
+                  continue
+              # 4 enum (topic/decision/self/digest) 만 필수키 검사
               for req in ("id","type","status","locale","sources","updated_at"):
                   if req not in keys: print(f"  ✗ {p} 필수키 누락: {req}"); errs += 1
-              # type enum
-              t = keys.get("type","")
-              if t and t not in ("topic","decision","self","digest","dashboard","positioning"):
+              if t and t not in ("topic","decision","self","digest"):
                   print(f"  ✗ {p} type enum: {t}"); errs += 1
-              # status enum
               s = keys.get("status","")
               if s and s not in ("draft","reviewed","published"):
                   print(f"  ✗ {p} status enum: {s}"); errs += 1
-              # duplicate id
               iid = keys.get("id","")
               if iid:
                   if iid in seen_ids: print(f"  ✗ dup id: {iid}"); errs += 1
