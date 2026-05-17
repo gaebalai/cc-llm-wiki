@@ -54,3 +54,5 @@
 - 2026-05-18T00:00:00+09:00 | [verify] | cc-session | marketplace.json·plugin.json raw.githubusercontent.com 에서 fetch 확인. 사용자 측 /plugin marketplace add gaebalai/cc-llm-wiki 즉시 가능 | -
 - 2026-05-18T00:15:00+09:00 | [raw-rename] | human-via-cc | macos 숨겨진 폴더 raw 파일을 SCHEMA §3 슬러그 규칙에 맞게 리네임. ERROR 1→0 | "vault/01_raw/articles/macos 숨겨진 폴더 - Google 검색.md" -> "vault/01_raw/articles/2026-05-17-macos-show-hidden-folder.md"
 - 2026-05-18T00:25:00+09:00 | [obsidian] | human-via-cc | .gitignore 에 vault/.obsidian/plugins/ 추가 (바이너리 무시), community-plugins.json 만 commit (Dataview enable 명세 보존) — 표준 패턴 적용 | .gitignore vault/.obsidian/community-plugins.json
+- 2026-05-18T00:35:00+09:00 | [health] | cc-session | 14 영역 sanity check: PASS 28 / FAIL 0 / WARN 0 (JSON/YAML/SKILL frontmatter/Python compile/Bash syntax/lint 10항목/내부링크/marketplace 교차참조/git 상태/시크릿 leak/hook 시뮬레이션/dry-run/install.sh --check) | -
+- 2026-05-18T01:00:00+09:00 | [docs] | cc-session | blog.md 신설 (353줄): cc-llm-wiki 블로그 소개글. 도입(RAG 한계·Karpathy 영감)부터 3층 격리·Context Engineering 6기법·기술 스택·9 자산·설치·5분 데모·의도 거부·CLAUDE.md 11섹션·보안·Plugin marketplace 구조·Phase 진척·한 줄 요약·영감 자료 | blog.md
