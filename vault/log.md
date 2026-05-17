@@ -50,3 +50,5 @@
 - 2026-05-17T23:00:00+09:00 | [installer] | cc-session | install.sh step 7 마무리에 QUICKSTART.md 안내 추가 | scripts/install.sh
 - 2026-05-17T23:30:00+09:00 | [raw-clean][schema] | human-via-cc | SCHEMA §6 신설: raw 메타-only 정리 허용 + 트레일러 marker 권장 + 적용 사례 1건. CLAUDE.md §2 권한, §3-① 예외 갱신. self/llm-wiki-origins.md 회고 메모 1건 append | vault/SCHEMA.md CLAUDE.md vault/02_wiki/self/llm-wiki-origins.md
 - 2026-05-17T23:30:00+09:00 | [raw-clean] | human | docs/11 raw 파일에서 메타 노이즈 제거 (SEO 후보 블록·번역 노트 3건·이미지 자리 1건·APOC 인용 형식 정정). 본문 의미 무변경 | vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md
+- 2026-05-18T00:00:00+09:00 | [release] | human-via-cc | GitHub Public repo 생성 + push origin main + tag v0.1.0 + Release 게시 | https://github.com/gaebalai/cc-llm-wiki | https://github.com/gaebalai/cc-llm-wiki/releases/tag/v0.1.0
+- 2026-05-18T00:00:00+09:00 | [verify] | cc-session | marketplace.json·plugin.json raw.githubusercontent.com 에서 fetch 확인. 사용자 측 /plugin marketplace add gaebalai/cc-llm-wiki 즉시 가능 | -
