@@ -61,9 +61,9 @@ cc-llm-wiki/
 │   ├── marketplace.json
 │   └── plugin.json
 ├── .claude/
-│   ├── skills/                  # 4 활성 (ingest·lint·compile·graph-sync)
+│   ├── skills/                  # 8 활성 (ingest·lint·compile·query·graph-sync·morning-brief·evening-reflect·daily-digest)
 │   ├── commands/                # /install
-│   ├── routines/                # weekly-lint·weekly-review·daily-digest
+│   ├── routines/                # weekly-lint·weekly-review·wiki-ingest-sweep·sleep-maintenance·daily-digest (5 active)
 │   ├── queue/                   # PostToolUse hook 이 graph 큐 적재
 │   ├── settings.json            # 공유 (Hook·permissions)
 │   └── settings.local.json      # 개인 (글로벌 ignore)
@@ -152,7 +152,8 @@ cc-llm-wiki/
 
 설치 후 자동 활성화:
 - Commands: `/install` (1 건)
-- Skills: `ingest` · `lint` · `compile` · `graph-sync` (4 건)
+- Skills: `ingest` · `lint` · `compile` · `query` · `graph-sync` · `morning-brief` · `evening-reflect` · `daily-digest` (8 건)
+- Routines: `weekly-lint` · `weekly-review` · `wiki-ingest-sweep` · `sleep-maintenance` · `daily-digest` (5 건, `/schedule create` 별도 등록 필요)
 
 ⚠ Plugin 활성 시 `.claude/settings.json` 의 hooks 는 자동 로드되지 않습니다.
 별도 프로젝트에서 사용 시 `/install` 이 사용자 `.claude/settings.json` 에 hooks 를 머지하는 흐름은 **다음 release** 에서 추가.
