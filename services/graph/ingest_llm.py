@@ -138,14 +138,42 @@ def normalize_with_aliases(name: str, lookup: dict[str, tuple[str, str]]) -> tup
 
 
 def chunk_body(body: str, max_chars: int = 2000) -> list[str]:
-    """LLM 토큰 한계 회피용 청크 분할 (단순 길이 기반).
-    실제로는 문단·헤더 기준이 좋지만 PoC 는 단순."""
+    """LLM 토큰 한계 회피용 청크 분할 (v0.4.1: 헤더 기반).
+    1. `## ` 헤더 기준으로 1차 분할 (의미 단위 보존)
+    2. 청크가 max_chars 초과면 단락 (\\n\\n) 기준 2차 분할
+    3. 그래도 초과면 길이 기준 강제 분할
+    """
     if len(body) <= max_chars:
         return [body]
+
+    # 1차: ## 헤더 기준
+    header_sections = re.split(r'(?=^## )', body, flags=re.M)
     chunks = []
-    for i in range(0, len(body), max_chars):
-        chunks.append(body[i:i + max_chars])
-    return chunks
+    for section in header_sections:
+        if not section.strip():
+            continue
+        if len(section) <= max_chars:
+            chunks.append(section)
+            continue
+        # 2차: 단락 (\n\n) 기준
+        paragraphs = section.split("\n\n")
+        current = ""
+        for p in paragraphs:
+            if len(current) + len(p) + 2 <= max_chars:
+                current = (current + "\n\n" + p) if current else p
+            else:
+                if current:
+                    chunks.append(current)
+                # 3차: 단락 자체가 큼 → 강제 분할
+                if len(p) > max_chars:
+                    for i in range(0, len(p), max_chars):
+                        chunks.append(p[i:i + max_chars])
+                    current = ""
+                else:
+                    current = p
+        if current:
+            chunks.append(current)
+    return chunks or [body]
 
 
 def extract_with_llm(chunks: list[str], openai_key: str, model: str = "gpt-4o-mini") -> dict:
