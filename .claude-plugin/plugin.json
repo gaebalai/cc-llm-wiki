@@ -37,5 +37,5 @@
       "slack-webhook": "for daily-digest 알림 (없으면 dry-run)"
     }
   },
-  "notes": "본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다. Cloudflare Pages·다국어 publish 는 의도적으로 제외. 설치 후 `/install` 슬래시 명령으로 Obsidian/Dataview/Docker Neo4j/Slack 설정을 7 단계 대화형으로 진행하세요. settings.json 의 hooks(raw 보호 등) 는 plugin 활성 시 자동 로드되지 않으므로, 별도 프로젝트에서 사용 시 `/install` 이 사용자 .claude/settings.json 에 hooks 를 복사합니다(향후 작업)."
+  "notes": "⚠ v0.1.0 운영 권장: git clone (Plugin 글로벌 설치는 v0.2.0 부터 안정). v0.1.0 Plugin 한계 6 가지: (1) Hook 자동 로드 안 됨 (2) vault 가 plugin 디렉터리에 생성 (3) 사용자 cwd 무시 (4) plugin 쓰기 권한 충돌 가능 (5) 다중 vault 미지원 (6) .env 위치 혼란. README 의 'Plugin 경로' 섹션 참조. 본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다."
 }

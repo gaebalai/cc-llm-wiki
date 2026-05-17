@@ -17,36 +17,12 @@
 
 ---
 
-## 1. 설치 (3 가지 방법, 위에서 아래로 쉬운 순)
+## 1. 설치 (3 가지 방법)
 
-### 방법 ① Claude Code Plugin (가장 권장)
+> ⚠ **v0.1.0 현재 권장: 방법 ① Git clone**.
+> Plugin 글로벌 설치는 v0.2.0 부터 안정. v0.1.0 Plugin 은 Hook 자동 로드 안 됨·vault 가 plugin 디렉터리에 생성되는 등 6 가지 구조적 한계가 있습니다.
 
-이미 Claude Code 설치되어 있다면 세션에서 한 줄:
-
-```
-/plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode-to-marketplace
-```
-
-→ 4 Skills(`ingest`/`lint`/`compile`/`graph-sync`) + `/install` 명령이 자동 활성화.
-
-다음 단계: 새 작업 디렉터리 만들고 그 안에서 `/install` 실행:
-
-```bash
-mkdir ~/my-knowledge-base && cd ~/my-knowledge-base
-claude   # Claude Code 세션 시작
-```
-
-세션 안에서:
-```
-/install
-```
-
-→ 7 단계 대화형 셋업 시작 (아래 § 2 참조).
-
-### 방법 ② Git clone + 직접 설치
-
-Plugin marketplace를 안 쓰고 코드를 직접 받고 싶다면:
+### 방법 ① Git clone + 직접 설치 (v0.1.0 권장)
 
 ```bash
 git clone https://github.com/gaebalai/cc-llm-wiki.git ~/cc-llm-wiki
@@ -54,9 +30,18 @@ cd ~/cc-llm-wiki
 bash scripts/install.sh
 ```
 
-### 방법 ③ 환경만 검사 (변경 없음)
+→ 7-단계 대화형 셋업이 `~/cc-llm-wiki/` 안에서 모두 동작. vault·.env·Hook 정상.
 
-설치 전에 자기 환경이 준비됐는지만 확인:
+### 방법 ② Claude Code Plugin (v0.2.0 부터 안정)
+
+```
+/plugin marketplace add gaebalai/cc-llm-wiki
+/plugin install cc-llm-wiki@claudecode-to-marketplace
+```
+
+→ 4 Skills + `/install` 활성화. **v0.1.0 에서는 vault 가 plugin 디렉터리에 생성되는 문제**가 있어 방법 ① 권장.
+
+### 방법 ③ 환경만 검사 (변경 없음)
 
 ```bash
 bash scripts/install.sh --check
