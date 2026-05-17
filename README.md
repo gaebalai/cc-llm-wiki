@@ -15,24 +15,28 @@
 
 ## 빠른 시작
 
-> ⚠ **v0.1.0 운영 권장: `git clone`** (Plugin 글로벌 설치는 v0.2.0 부터 안정).
-> v0.1.0 Plugin 설치 시 Hook 자동 로드 안 됨·vault 가 plugin 디렉터리에 생성되는 등 6 가지 한계가 있어
-> 현재는 **git clone 경로가 가장 안전합니다.**
+### Plugin 경로 (권장, v0.2.0+)
 
-### 권장 경로 (v0.1.0)
+```bash
+mkdir ~/my-knowledge-base && cd ~/my-knowledge-base
+claude   # Claude Code 세션
+```
+
+세션 안에서:
+```
+/plugin marketplace add gaebalai/cc-llm-wiki
+/plugin install cc-llm-wiki@claudecode-to-marketplace
+/install
+```
+
+→ `install.sh` 가 PLUGIN_INSTALL 자동 감지 → 템플릿을 `~/my-knowledge-base/` 로 복사 + 사용자 `.claude/settings.json` 에 Hook 안전 머지.
+
+### git clone 경로 (v0.1.0 또는 plugin 없이)
 
 ```bash
 git clone https://github.com/gaebalai/cc-llm-wiki.git ~/cc-llm-wiki
 cd ~/cc-llm-wiki
 bash scripts/install.sh
-```
-
-### Plugin 경로 (v0.2.0 부터 안정 예정)
-
-```
-/plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode-to-marketplace
-/install
 ```
 
 자세한 단계별 가이드: **[QUICKSTART.md](QUICKSTART.md)** ← 첫 사용자는 여기부터

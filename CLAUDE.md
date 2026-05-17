@@ -181,5 +181,4 @@ routine 명세는 `.claude/routines/<name>.md`. 실제 cron 등록은 별도 `/s
 ## 본 헌법의 진실의 소스
 
 - 설계 plan: `/Users/gaebalai/.claude/plans/docs-11-twinkling-lemon.md`
-- 원전 문서: `docs/1-karpathy_llm_wiki.md` ~ `docs/11-2do_brain_neo4j_graphrag_poc.md`
 - 변경 시: 반드시 사람이 PR 리뷰. AI는 본 CLAUDE.md를 절대 자동 수정하지 않는다.

@@ -1,6 +1,6 @@
 # Claude Code 로 만드는 "복리로 자라는" 개인 지식 베이스 — cc-llm-wiki 소개
 
-> Karpathy 의 LLM Wiki 원전부터 Neo4j GraphRAG PoC 까지 11 개 설계 문서를 한 환경으로 통합했다.
+> Karpathy 의 LLM Wiki 원전부터 Neo4j GraphRAG PoC 까지 11 개 설계 문서를 토대로 한 환경으로 통합했다.
 > Plugin 한 줄로 깔고 `/install` 명령으로 7 단계 셋업이 끝난다.
 > RAG 의 "매번 0 부터 검색" 패턴 대신, **위키화한 지식이 시간이 갈수록 복리로 자라는** 구조다.
 
@@ -26,8 +26,7 @@ Andrej Karpathy 는 작년에 이런 글을 썼다 (요약):
 > RAG 의 "검색 → 합성" 으로 끝낼 게 아니라, **"검색 → 합성 → 컴파일 → 축적"** 으로 가야 한다.
 > LLM 의 진짜 가치는 요약이 아니라 **여러 자료를 가로질러 만드는 개념 페이지**에 있다.
 
-이 발상에서 시작된 [LLM Wiki](https://github.com/karpathy/llm-wiki) 원전과, 그 위에 누적된 10 편의 후속 설계 문서를 통합해
-**"Claude Code 안에서 도는 개인 지식 베이스"** 를 만들었다.
+이 발상에서 시작된 [LLM Wiki](https://github.com/karpathy/llm-wiki) 원전과, 그 위에 제작자(JAEWOO KIM)가 실무에서 적용한 몇가지 테스트와 실무 내용을 토대로 구축했던 10가지 설계 문서를 통합해 **"Claude Code 안에서 도는 개인 지식 베이스"** 를 만들었다.
 
 GitHub: https://github.com/gaebalai/cc-llm-wiki
 

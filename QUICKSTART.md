@@ -17,12 +17,27 @@
 
 ---
 
-## 1. 설치 (3 가지 방법)
+## 1. 설치 (3 가지 방법, 위에서 아래로 쉬운 순)
 
-> ⚠ **v0.1.0 현재 권장: 방법 ① Git clone**.
-> Plugin 글로벌 설치는 v0.2.0 부터 안정. v0.1.0 Plugin 은 Hook 자동 로드 안 됨·vault 가 plugin 디렉터리에 생성되는 등 6 가지 구조적 한계가 있습니다.
+### 방법 ① Claude Code Plugin (v0.2.0+ 권장)
 
-### 방법 ① Git clone + 직접 설치 (v0.1.0 권장)
+새 작업 디렉터리에서:
+
+```bash
+mkdir ~/my-knowledge-base && cd ~/my-knowledge-base
+claude
+```
+
+세션 안에서:
+```
+/plugin marketplace add gaebalai/cc-llm-wiki
+/plugin install cc-llm-wiki@claudecode-to-marketplace
+/install
+```
+
+`install.sh` 가 PLUGIN_INSTALL 자동 감지 → 템플릿을 `~/my-knowledge-base/` 로 복사 + 사용자 `.claude/settings.json` 에 Hook 안전 머지 + 7-단계 대화형 셋업.
+
+### 방법 ② Git clone + 직접 설치
 
 ```bash
 git clone https://github.com/gaebalai/cc-llm-wiki.git ~/cc-llm-wiki
@@ -30,16 +45,7 @@ cd ~/cc-llm-wiki
 bash scripts/install.sh
 ```
 
-→ 7-단계 대화형 셋업이 `~/cc-llm-wiki/` 안에서 모두 동작. vault·.env·Hook 정상.
-
-### 방법 ② Claude Code Plugin (v0.2.0 부터 안정)
-
-```
-/plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode-to-marketplace
-```
-
-→ 4 Skills + `/install` 활성화. **v0.1.0 에서는 vault 가 plugin 디렉터리에 생성되는 문제**가 있어 방법 ① 권장.
+→ 7-단계 셋업이 `~/cc-llm-wiki/` 안에서 모두 동작.
 
 ### 방법 ③ 환경만 검사 (변경 없음)
 
@@ -47,21 +53,29 @@ bash scripts/install.sh
 bash scripts/install.sh --check
 ```
 
+### 방법 ④ 특정 TARGET_DIR 강제
+
+```bash
+bash scripts/install.sh --target-dir ~/another-vault
+```
+
 ---
 
-## 2. `/install` 7 단계 흐름
+## 2. `/install` 7+1 단계 흐름
 
 | Step | 자동화 | 사용자 액션 | 소요 |
 |---|---|---|---|
-| **1** 환경 검사 | git/python3/brew/docker 존재 확인 | 없음 | 5초 |
+| **1** 환경 검사 | git/python3/brew/docker 존재 확인 + PLUGIN_INSTALL 감지 시 템플릿 복사 (`vault`·`infra`·`services`·`scripts`·`.claude/`·`CLAUDE.md` 등) | 없음 | 5~10초 |
 | **2** Obsidian | `brew install --cask obsidian` (동의 시) | y/N 한 번 + Obsidian 첫 실행 시 권한 부여 | 2분 |
 | **3** Dataview | `vault/dashboards/status.md` 자동 열기 | Obsidian 내부에서 `Settings → Community plugins → Browse → Dataview → Enable` | 2분 |
 | **5** `.env` 생성 | `cp .env.example .env` + `NEO4J_PASSWORD` 자동 생성 | y/N 한 번 | 5초 |
+| **5.5** Hook 머지 (PLUGIN_INSTALL only) | 사용자 `.claude/settings.json` 에 plugin hooks 4 종 안전 머지 (기존 hook 보존) | 없음 | 1초 |
 | **4** Docker + Neo4j | Docker Desktop 기동 polling + `docker compose up -d` | Docker.app 최초 1회 권한 부여 | 1~2분 |
 | **6** Slack 토큰 | 발급 안내 + dry-run 검증 | (선택) `$EDITOR .env`로 `SLACK_WEBHOOK_URL=...` 채우기 | 5분 (Slack App 만들기) |
 | **7** weekly-review | 운영 명령 요약 + 현재 통계 출력 | 없음 | 10초 |
 
 Step 5 가 Step 4 보다 먼저 실행됩니다 (`NEO4J_PASSWORD` 가 compose 의 prerequisite).
+Step 5.5 는 PLUGIN_INSTALL 일 때만 발동 (git clone 환경에서는 자동 skip).
 
 ### 도중에 실패하면
 
