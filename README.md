@@ -1,137 +1,139 @@
 # cc-llm-wiki
 
-Claude Code 중심의 **로컬 전용** LLM Wiki 환경.
-Karpathy의 LLM Wiki 원전(1·2번) + Context Engineering(4번) + Routine 자동화(5번 일부) + Skills 권한 분리(8번) + Neo4j GraphRAG PoC(11번)를 모노 리포로 통합.
+> Karpathy 의 LLM Wiki 원전부터 Neo4j GraphRAG PoC 까지 11 개 설계 문서를 통합한
+> **Claude Code 중심 로컬 전용 LLM Wiki**.
 
-**범위 결정 (2026-05-17)**: 외부 공개·다국어 HTML 발행은 하지 않는다.
-7번 docs 의 풀스택 제안 중 publish/Cloudflare 라인은 **제외**.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Plugin: Claude Code](https://img.shields.io/badge/Plugin-Claude_Code-blue)](https://github.com/gaebalai/cc-llm-wiki)
+[![Phase: P6](https://img.shields.io/badge/Phase-P6_complete-green)](#phase-로드맵)
+
+## 무엇
+
+- **Obsidian vault + Claude Code 9 Skills + Neo4j 그래프**의 통합 환경
+- 외부 공개·발신 없는 **로컬 전용** (Cloudflare 등 publish 라인 제외)
+- 자료가 쌓일수록 **복리로 성장**하는 지식 베이스 (요약 자동화 아님)
+
+## 빠른 시작
+
+```
+/plugin marketplace add gaebalai/cc-llm-wiki
+/plugin install cc-llm-wiki@cc-llm-wiki
+/install
+```
+
+자세한 단계별 가이드: **[QUICKSTART.md](QUICKSTART.md)** ← 첫 사용자는 여기부터
 
 ## 핵심 원칙
 
-1. **3층 격리**: `vault/01_raw/`(불변) · `vault/02_wiki/`(LLM 편찬) · `vault/SCHEMA.md`(사람 규율)
-2. **단방향 흐름**: raw → wiki → graph/index (역방향 쓰기 금지, 외부 발신 없음)
-3. **컨텍스트 위생**: raw 읽기 전용 강제, JIT 검색, 인간 승인 게이트
+1. **3 층 격리** — `vault/01_raw/`(불변) · `vault/02_wiki/`(LLM 편찬) · `vault/SCHEMA.md`(사람 규율)
+2. **단방향 흐름** — raw → wiki → graph (역방향 쓰기 금지)
+3. **컨텍스트 위생** — raw 읽기 전용 강제, JIT 검색, 인간 승인 게이트
 
 ## 디렉터리
 
 ```
 cc-llm-wiki/
-├── CLAUDE.md              # 헌법 (11 섹션)
-├── vault/
-│   ├── 01_raw/            # 원전 보존 (Read-Only, Hook 차단)
-│   ├── 02_wiki/
-│   │   ├── self/          # 비공개, 어디에도 노출 금지
-│   │   ├── decisions/     # ADR (덮어쓰기 금지)
-│   │   ├── topics/        # 지식 노드
-│   │   ├── digests/       # daily-digest routine 산출
-│   │   ├── _drafts/       # ingest 임시 산출
-│   │   └── _lint/         # 주간 lint 리포트
-│   ├── 03_schema/         # frontmatter/aliases.yaml
-│   ├── SCHEMA.md          # 사람이 정의한 사서 규율
-│   ├── index.md           # 전체 카탈로그
-│   ├── log.md             # 모든 LLM 행동 로그
-│   └── dashboards/        # Obsidian Dataview 보드
+├── CLAUDE.md                    # 헌법 (11 섹션)
+├── QUICKSTART.md                # ← 첫 사용자 가이드
+├── README.md                    # 본 파일
+│
+├── .claude-plugin/              # Plugin marketplace + manifest
+│   ├── marketplace.json
+│   └── plugin.json
 ├── .claude/
-│   ├── skills/            # ingest·lint·compile·graph-sync (활성 4종)
-│   ├── routines/          # weekly-lint·daily-digest (활성/dry-run)
-│   ├── queue/             # Hook 이 graph-sync 큐 적재
-│   ├── settings.json      # 공유 설정 (Hook·permissions)
-│   └── settings.local.json # 개인 설정 (글로벌 ignore)
-├── infra/neo4j/           # P5 GraphRAG PoC (docker-compose)
-├── services/graph/        # ingest_graph.py / query_graph.py / templates
-├── scripts/               # post_slack.py 등
-└── docs/                  # 11개 설계 문서 (참조용, .gitignore)
+│   ├── skills/                  # 4 활성 (ingest·lint·compile·graph-sync)
+│   ├── commands/                # /install
+│   ├── routines/                # weekly-lint·weekly-review·daily-digest
+│   ├── queue/                   # PostToolUse hook 이 graph 큐 적재
+│   ├── settings.json            # 공유 (Hook·permissions)
+│   └── settings.local.json      # 개인 (글로벌 ignore)
+│
+├── vault/
+│   ├── 01_raw/                  # 원전 보존 (Read-Only Hook)
+│   ├── 02_wiki/
+│   │   ├── self/                # 비공개, 어디에도 노출 금지
+│   │   ├── decisions/           # ADR (append-only)
+│   │   ├── topics/              # 지식 노드 (현재 3 건)
+│   │   ├── digests/             # daily-digest routine 산출
+│   │   ├── _drafts/             # ingest 임시 산출
+│   │   └── _lint/               # 주간 lint 리포트
+│   ├── 03_schema/aliases.yaml   # entity 정규화 (14 canonical / 47 aliases)
+│   ├── SCHEMA.md                # 사서 규율 (5 섹션)
+│   ├── index.md                 # 카탈로그
+│   ├── log.md                   # 모든 LLM 행동 기록
+│   └── dashboards/status.md     # Dataview 6 쿼리
+│
+├── infra/neo4j/                 # docker-compose.yml (Neo4j 5.18.1 + APOC)
+├── services/graph/              # ingest_graph.py / query_graph.py / templates
+├── scripts/                     # install.sh (7-step) / post_slack.py
+├── docs/                        # 11 개 설계 문서 (gitignore)
+└── docs-internal/               # 저자용 (PUBLISH.md)
 ```
+
+## 활성 자산
+
+| 영역 | 자산 | 비고 |
+|---|---|---|
+| Skill | `ingest` · `lint` · `compile` · `graph-sync` | 4 종, P1~P5 |
+| Command | `/install` | 7-단계 원스톱 installer |
+| Routine | `weekly-lint` (일 06:00) · `weekly-review` (일 21:00) | KST cron |
+| Hook | PreToolUse (raw 차단, main 차단) · PostToolUse (graph 큐) · SessionStart | |
+| 인프라 | Neo4j 5.18.1 + APOC (Docker) | dry-run 가능 |
+| 검색 | Cypher 템플릿 3 종 (causal_path / concept_neighbors / orphan_audit) | 고정 템플릿만 |
 
 ## Phase 로드맵
 
 | Phase | 목표 | 상태 |
 |---|---|---|
-| **P0** | git·골격·헌법 + raw Read-Only Hook | ✅ |
-| **P1** | 1편 raw → wiki 토론 ingest | ✅ (3 topics 승급) |
-| **P2** | Context 가드 (lint 10 항목 + SCHEMA §5 명문화) | ✅ |
-| **P3** | compile Skill + Dataview 보드 | ✅ |
-| **P4** | daily-digest + weekly-lint routine | ✅ 골격 (Skill 본체 후속) |
-| **P5** | Neo4j GraphRAG PoC | ✅ 골격 + PostToolUse queue hook 활성 |
-| **P6** | 정착 (origins 회고 + weekly-review routine) | ✅ |
+| P0 | git·골격·헌법 + raw Read-Only Hook | ✅ |
+| P1 | raw → wiki 토론 ingest | ✅ (3 topics) |
+| P2 | Context 가드 (lint 10 항목 + SCHEMA §5 명문화) | ✅ |
+| P3 | compile Skill + Dataview 보드 | ✅ |
+| P4 | weekly-lint routine + Slack 골격 | ✅ (daily-digest 본체 후속) |
+| P5 | Neo4j GraphRAG PoC + PostToolUse 큐 hook | ✅ |
+| P6 | llm-wiki-origins + weekly-review | ✅ |
+| Plugin | marketplace.json + plugin.json + install.sh | ✅ |
 
-자세한 설계: `~/.claude/plans/docs-11-twinkling-lemon.md`
+설계 plan 전체: `~/.claude/plans/docs-11-twinkling-lemon.md`
 
-## 이번 환경에서 하지 않는 것
+## 이 환경에서 하지 않는 것
 
-- **외부 공개·다국어 HTML 발행** (publish Skill·Cloudflare Pages·dist/ 라인 전체 제외)
-- 자연어 → Cypher LLM 생성 (고정 템플릿만)
+- **외부 공개·다국어 HTML 발행** (publish Skill·Cloudflare Pages·`dist/` 제외) — 로컬 전용 결정
+- **자연어 → Cypher LLM 자동 생성** (고정 템플릿만)
 - `self/` 폴더 내용을 graph·digest·MCP·query 응답에 노출
 - 쓰기 Skill 의 모델 자동 호출 (Routine·명시 명령만)
 - raw/ 직접 편집·자동 정리 (Hook 이 exit 2 로 차단)
-- Kagura MCP (P6 옵션 — 4주 자생 검증 후 결정)
+- Kagura MCP (P6 옵션 — 4 주 자생 검증 후 결정)
 
-## 설치
+## Plugin 으로 사용
 
-### 원스톱 (권장)
-
-```bash
-# 전체 7 단계 대화형 진행 (Obsidian → Dataview → .env → Docker Neo4j → Slack → weekly-review)
-bash scripts/install.sh
-
-# 또는 Claude Code 세션 안에서
-/install
-```
-
-옵션:
-- `bash scripts/install.sh --check` — 변경 없이 환경만 검사
-- `bash scripts/install.sh --step 4` — 특정 단계만 실행 (1~7)
-
-### 수동 설치
-
-원스톱 스크립트가 막히면 단계별로:
-
-1. Obsidian: `brew install --cask obsidian` → `vault/` 를 Vault 로 open
-2. Excluded files: `Settings → Files & Links` 에 `plans/`, `.claude/queue/` 추가
-3. Dataview: `Settings → Community plugins → Browse → Dataview → Install → Enable` → `vault/dashboards/status.md` 열기
-4. `.env`: `cp .env.example .env` → `NEO4J_PASSWORD` 채우기
-5. Neo4j: `brew install --cask docker` → Docker.app 켜기 → `docker compose -f infra/neo4j/docker-compose.yml up -d`
-6. Slack(선택): `.env` 에 `SLACK_WEBHOOK_URL` 추가, 미설정 시 자동 dry-run
-7. (선택) `pip install neo4j` 후 `DRY_RUN=0 python3 services/graph/ingest_graph.py --all --env .env`
-
-## Claude Code Plugin 으로 사용
-
-본 리포는 **단일-plugin 마켓플레이스** 패턴입니다.
-루트의 `.claude-plugin/marketplace.json` (마켓플레이스 정의) + `.claude-plugin/plugin.json` (플러그인 정의)로 구성.
-
-### 다른 사람이 설치하는 법 (Claude Code 세션 안)
+본 리포는 **단일-plugin 마켓플레이스** 패턴 (`.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json`).
 
 ```
-/plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@cc-llm-wiki
+/plugin marketplace add gaebalai/cc-llm-wiki        # 추가 (1 회)
+/plugin install cc-llm-wiki@cc-llm-wiki              # 설치 (1 회)
+/plugin update cc-llm-wiki@cc-llm-wiki               # 업데이트
 ```
 
-- `gaebalai/cc-llm-wiki` = GitHub `<owner>/<repo>` 형식
-- `cc-llm-wiki@cc-llm-wiki` = `<plugin-name>@<marketplace-name>` (둘 다 같은 이름)
+설치 후 자동 활성화:
+- Commands: `/install` (1 건)
+- Skills: `ingest` · `lint` · `compile` · `graph-sync` (4 건)
 
-설치되면 다음이 자동 활성화:
+⚠ Plugin 활성 시 `.claude/settings.json` 의 hooks 는 자동 로드되지 않습니다.
+별도 프로젝트에서 사용 시 `/install` 이 사용자 `.claude/settings.json` 에 hooks 를 머지하는 흐름은 **다음 release** 에서 추가.
 
-| 컴포넌트 | 경로 | 자동 발견 |
-|---|---|---|
-| Commands | `.claude/commands/` | `/install` 1개 |
-| Skills | `.claude/skills/` | `ingest`·`lint`·`compile`·`graph-sync` 4개 |
+## 보안
 
-설치 후 즉시 `/install` 명령으로 7-단계 환경 셋업 진행.
+- `.env.example` 은 placeholder 만. 실제 시크릿은 `.env` 에 (`.gitignore` 자동 무시).
+- 시크릿 push 사고 방지: `git ls-files | xargs grep -lE 'xox[abeops]-|sk-[a-zA-Z0-9_-]{20,}'` 로 push 전 검사.
+- `install.sh` 가 `.env` 안전성 (gitignore 처리) 자동 검증.
 
-### 업데이트
+## 기여 / 게시
 
-```
-/plugin update cc-llm-wiki@cc-llm-wiki
-```
+- 첫 사용자: **[QUICKSTART.md](QUICKSTART.md)**
+- 저자 (push/release): **[docs-internal/PUBLISH.md](docs-internal/PUBLISH.md)**
+- 설계 결정 회고: **[vault/02_wiki/self/llm-wiki-origins.md](vault/02_wiki/self/llm-wiki-origins.md)**
 
-### plugin 개발자(저자) 가 새 버전 게시
+## 라이선스
 
-```bash
-# 1. 변경 후 plugin.json + marketplace.json 의 version 둘 다 bump (semver)
-# 2. 커밋 + tag
-git tag v0.2.0 -m "release: 0.2.0"
-git push origin main --tags
-# 3. 사용자가 /plugin update 로 받음
-```
-
-`version` 생략 시 git commit SHA 가 버전이지만, 명시적 semver 권장.
+[MIT](LICENSE)

@@ -341,7 +341,12 @@ step7_weekly_review() {
   info "  현재 topics: $(find vault/02_wiki/topics -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
   info "  현재 raw   : $(find vault/01_raw -name '*.md' 2>/dev/null | wc -l | tr -d ' ')"
   info ""
-  ok "설치 완료. README.md 와 CLAUDE.md 도 한 번 훑어 주세요."
+  ok "설치 완료."
+  info ""
+  info "📘 다음에 읽으세요:"
+  info "  • ${C_BOLD}QUICKSTART.md${C_RESET}     — 첫 ingest~compile 단계별 가이드 (30분)"
+  info "  • README.md          — 프로젝트 개요·구조·Phase 로드맵"
+  info "  • CLAUDE.md          — 11 섹션 헌법 (권한·금기·Skill·MCP)"
 }
 
 # ───── 메인 ─────

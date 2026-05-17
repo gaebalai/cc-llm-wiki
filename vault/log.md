@@ -44,3 +44,7 @@
 - 2026-05-17T22:30:00+09:00 | [marketplace] | cc-session | .claude-plugin/marketplace.json 신설, plugin.json 정정 (commands/skills 를 디렉터리 string 으로). 단일-plugin 마켓플레이스 패턴 | .claude-plugin/marketplace.json .claude-plugin/plugin.json
 - 2026-05-17T22:30:00+09:00 | [docs] | cc-session | PUBLISH.md 작성: GitHub repo 생성 → remote add → push → tag 절차, 사용자 측 /plugin marketplace add gaebalai/cc-llm-wiki 흐름 | docs-internal/PUBLISH.md README.md
 - 2026-05-17T22:30:00+09:00 | [verify] | cc-session | JSON 유효성 + 교차참조 검증 (commands 1건, skills 4건 자동 발견 가능) | -
+- 2026-05-17T23:00:00+09:00 | [docs] | cc-session | QUICKSTART.md 신설 (첫 사용자 9 섹션: 설치 3 방법, /install 7 단계, ingest~graph-sync 워크플로, cheat sheet, FAQ, 한 줄 요약) | QUICKSTART.md
+- 2026-05-17T23:00:00+09:00 | [docs] | cc-session | README.md 재구성: 정체성 중심으로 슬림화. plugin 빠른 시작 → QUICKSTART 연결, badges 추가, Phase 로드맵 현황표, 활성 자산 카탈로그 | README.md
+- 2026-05-17T23:00:00+09:00 | [docs] | cc-session | LICENSE 신설 (MIT, Jaewoo Kim 2026) | LICENSE
+- 2026-05-17T23:00:00+09:00 | [installer] | cc-session | install.sh step 7 마무리에 QUICKSTART.md 안내 추가 | scripts/install.sh
