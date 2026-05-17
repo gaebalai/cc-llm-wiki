@@ -145,8 +145,28 @@ python3 scripts/post_slack.py \
 - Slack 호출 실패 → stderr 만, PR 은 그대로 머지 가능
 - PR 생성 실패 → 브랜치만 push, 사용자가 수동 PR
 
+## v0.4.0+ dry-run 골격
+
+`positioning.md` 작성 직후 정책 시뮬레이션:
+
+```bash
+cp skills/daily-digest/positioning.template.md ~/my-knowledge-base/positioning.md
+$EDITOR ~/my-knowledge-base/positioning.md
+
+DRY_RUN=1 /daily-digest   # 쿼리 설계만, 외부 호출 없음
+DRY_RUN=0 /daily-digest   # 실 WebSearch + digest 생성
+```
+
+활성 체크리스트:
+- [ ] `vault/positioning.md` 작성
+- [ ] `.env` 의 `SLACK_WEBHOOK_URL` (선택, 통지용)
+- [ ] `gh auth login` (PR 자동 생성)
+- [ ] weekly-review 첫 회고 (positioning 검증)
+- [ ] `/schedule create` 로 실 cron 등록
+
 ## 미해결 / 향후
 
 - 한국어/영어 자료 비율 조정 (현재는 keyword 기반)
 - 트렌드 감지 (같은 토픽이 N 일 연속 등장 시 합치기)
 - `morning-digest-recap` routine 과의 연결 (Slack 리액션 수집 → positioning 자동 갱신)
+- v0.4.0+ ingest_llm.py 와 연동: digest 의 entity 도 LLM 추출 → 그래프 통합

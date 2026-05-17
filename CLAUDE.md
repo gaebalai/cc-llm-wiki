@@ -148,9 +148,10 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 
 자산:
 - `infra/neo4j/docker-compose.yml` — Neo4j 5.18.1 + APOC, read-only vault 마운트
-- `services/graph/ingest_graph.py` — frontmatter id → metadata.id 고정, DRY_RUN 지원
-- `services/graph/query_graph.py` — 템플릿 + 파라미터, DRY_RUN 지원
-- `skills/graph-sync/SKILL.md` — 6-step 동기 절차
+- `services/graph/ingest_graph.py` — 룰베이스 (aliases.yaml 매칭), MENTIONS/REFERS_TO, 외부 vault 지원
+- `services/graph/ingest_llm.py` (v0.4.0+) — LangChain LLMGraphTransformer, SOLVES/USES 의미 관계 + aliases-candidates 자동 발견
+- `services/graph/query_graph.py` — 템플릿 + 파라미터, env 우선 override
+- `skills/graph-sync/SKILL.md` — 6-step 동기 절차 + flat/subdir/외부 vault 모두
 
 활성화 조건:
 1. `docker compose -f infra/neo4j/docker-compose.yml up -d`
