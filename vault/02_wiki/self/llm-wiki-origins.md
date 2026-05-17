@@ -88,6 +88,7 @@ Karpathy 원전 (2024-25)
 > 본 페이지는 self/ 라 LLM 이 외부로 인용하지 않는다(SCHEMA §4-④).
 > 운영 중 "이 결정이 정말 옳았나" 를 발견하면 본 페이지에 timestamp 와 함께 append.
 
+- 2026-05-17 — **raw 불변 완전 금지는 비현실적**. 원전이 메타 노이즈(SEO 후보·번역 노트·이미지 자리 표시) 로 오염된 채 ingest 되면 wiki 본문의 인용도 같이 오염된다. → **SCHEMA §6 신설**: 사람의 1 회 정리 허용 (메타-only, 본문 의미 무변경, 트레일러 marker + `[raw-clean]` commit). 첫 적용: `vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md`.
 - (예시) 2026-06-XX — Kagura 없이도 topics 50건까지는 grep + Dataview 로 충분. 4주 검증 결과
 - (예시) 2026-06-XX — Slack 통지 한 번도 안 봄. daily-digest routine 자체를 비활성 검토
 

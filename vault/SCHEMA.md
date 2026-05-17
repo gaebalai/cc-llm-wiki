@@ -87,6 +87,46 @@ lint는 **보고만** 한다. 검출된 ERROR/WARN을 LLM이 자동 리네임·�
 
 ---
 
+## 6. raw 불변 정책의 예외 — "메타 노이즈 정리" 허용 (2026-05-17 신설)
+
+원칙은 여전히 **raw 불변**이다(CLAUDE.md §3-①). 그러나 다음 두 조건을 **모두** 만족하면 사람의 1회 정리를 허용한다.
+
+### 6.1 허용 범위 (메타-only)
+
+다음 *메타 노이즈* 만 제거 가능:
+- SEO 제목 후보·번역 노트·"이미지 자리 표시" 같은 작성자 주석 블록
+- 원문 사이트 자체 링크 카드·내부 광고
+- 본문과 무관한 footer 메타 (구독 안내, 큐레이션 광고)
+
+**금지** (의미 변경):
+- 본문 문장·인용·데이터·수치·날짜 수정
+- 단락 순서 변경
+- 자기 해석을 추가하는 일 (그건 wiki 의 일)
+
+### 6.2 절차
+
+1. 정리는 **사람만** 수행 (Hook 이 LLM Edit/Write 는 그대로 차단)
+2. 정리 후 raw 파일 **맨 끝에** 트레일러 1 줄 권장:
+   ```
+   <!-- cleaned-by: human at YYYY-MM-DDTHH:MM:SS+09:00 — meta-only (no semantic change) -->
+   ```
+3. 이 raw 를 sources 로 가진 wiki 페이지가 있으면 **본문 인용이 여전히 유효한지** 사람이 직접 검증 (compile Skill 의 책임 아님)
+4. commit 메시지에 `[raw-clean]` prefix + 제거된 항목 요약
+
+### 6.3 lint 와의 관계
+
+- lint Skill 은 raw 파일 **본문을 읽지 않는다** (slug 검사만, SCHEMA §5 항목 8)
+- 트레일러 marker 존재 여부는 자동 검증하지 않음 (사람 신뢰 기반)
+- raw 가 ingest 된 후 wiki 페이지가 "stale" 로 판정될 수 있음 (SCHEMA §5 항목 10) — 그땐 사람이 wiki 본문 재검토
+
+### 6.4 적용 사례
+
+- **2026-05-17 첫 적용**: `vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md`
+  → SEO 후보 3 안 블록, "번역자 보완" 노트 3 건, "[원문 이미지 자리]" 1 건 제거.
+  본문 인용·수치 무변경. sources=이 raw 인 topics 3 건 (graphrag-poc-with-neo4j, entity-disambiguation-strategy, 2do-brain-architecture) 본문 인용 재검증 OK.
+
+---
+
 ## 6. SCHEMA 변경 절차
 
 - 본 파일 변경은 **사람만** 수행

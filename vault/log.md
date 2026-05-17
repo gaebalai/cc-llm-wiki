@@ -48,3 +48,5 @@
 - 2026-05-17T23:00:00+09:00 | [docs] | cc-session | README.md 재구성: 정체성 중심으로 슬림화. plugin 빠른 시작 → QUICKSTART 연결, badges 추가, Phase 로드맵 현황표, 활성 자산 카탈로그 | README.md
 - 2026-05-17T23:00:00+09:00 | [docs] | cc-session | LICENSE 신설 (MIT, Jaewoo Kim 2026) | LICENSE
 - 2026-05-17T23:00:00+09:00 | [installer] | cc-session | install.sh step 7 마무리에 QUICKSTART.md 안내 추가 | scripts/install.sh
+- 2026-05-17T23:30:00+09:00 | [raw-clean][schema] | human-via-cc | SCHEMA §6 신설: raw 메타-only 정리 허용 + 트레일러 marker 권장 + 적용 사례 1건. CLAUDE.md §2 권한, §3-① 예외 갱신. self/llm-wiki-origins.md 회고 메모 1건 append | vault/SCHEMA.md CLAUDE.md vault/02_wiki/self/llm-wiki-origins.md
+- 2026-05-17T23:30:00+09:00 | [raw-clean] | human | docs/11 raw 파일에서 메타 노이즈 제거 (SEO 후보 블록·번역 노트 3건·이미지 자리 1건·APOC 인용 형식 정정). 본문 의미 무변경 | vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md

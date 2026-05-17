@@ -17,7 +17,7 @@ AI 사서로서 사용자의 지식을 **복리로 성장**시킨다. 정보를 
 
 | 경로 | 사용자 | Claude Code 대화 | Skill(배치) |
 |---|---|---|---|
-| `vault/01_raw/**` | RW | **R only** | R only (ingest) |
+| `vault/01_raw/**` | RW (메타-only 정리, SCHEMA §6) | **R only** | R only (ingest) |
 | `vault/02_wiki/_drafts/**` | RW | RW | W (ingest) |
 | `vault/02_wiki/topics/**` | RW | RW | W (compile) |
 | `vault/02_wiki/decisions/**` | RW (append) | R | append only |
@@ -36,7 +36,8 @@ exit 2로 차단한다. raw는 인입 시점의 원본이며 절대 정리·정�
 
 ## §3. Anti-Patterns (이 6가지는 절대 금지)
 
-1. **raw 직접 편집** — Hook이 차단하지만, 의도조차 갖지 말 것
+1. **LLM 의 raw 편집** — Hook 이 exit 2 로 차단. 의도조차 갖지 말 것.
+   *예외*: 사람이 직접 메타 노이즈만 정리하는 1 회 작업은 허용 (SCHEMA §6 절차 — 트레일러 marker + `[raw-clean]` commit). 본문 의미 변경은 불가
 2. **재귀 요약 열화** — 이미 요약된 wiki를 또 요약해 새 wiki로 저장 금지
 3. **main 브랜치 직커밋** — 모든 자동 작업은 `auto-*/` 브랜치 + PR 패턴
 4. **자연어 → Cypher 자동 생성** — Neo4j 질의는 사전 정의된 고정 템플릿만
