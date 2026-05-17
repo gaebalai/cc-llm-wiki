@@ -68,6 +68,28 @@
           }
         ]
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const p=(j.prompt||'').trim();if(/^(좋은\\s*아침|morning|굿모닝|gm)\\b/i.test(p)){console.error('[hook] morning detected → /morning-brief 실행 권장');}}catch(e){}})\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'changed=$(git diff HEAD --name-only 2>/dev/null | grep -c \"^vault/02_wiki/\" || echo 0); if [ \"$changed\" -gt 0 ]; then echo \"[hook] Stop: vault/02_wiki/ $changed 건 변경 → /evening-reflect 권장 (수동)\"; fi'"
+          }
+        ]
+      }
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "cc-llm-wiki",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Claude Code 중심의 로컬 전용 LLM Wiki — 3층 격리(raw/wiki/schema) + Neo4j GraphRAG + Obsidian. Karpathy LLM Wiki 원전부터 GraphRAG PoC까지 통합한 풀스택 환경.",
   "author": {
     "name": "Jaewoo Kim",
@@ -37,5 +37,5 @@
       "slack-webhook": "for daily-digest 알림 (없으면 dry-run)"
     }
   },
-  "notes": "v0.2.0: Plugin 글로벌 설치 안정. install.sh 가 PLUGIN_INSTALL 감지 → 사용자 cwd 를 TARGET_DIR 로 사용 → vault/infra/services/scripts 템플릿 복사 → 사용자 .claude/settings.json 에 hooks 4 종 안전 머지 (기존 hook 보존). 다중 vault 지원 (--target-dir 옵션). 본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다. Cloudflare Pages·다국어 publish 는 의도적으로 제외."
+  "notes": "v0.3.0: 8 Skills 전부 작성 완료 (ingest·lint·compile·query·graph-sync·daily-digest·morning-brief·evening-reflect). UserPromptSubmit hook 으로 아침 인사 trigger, Stop hook 으로 모순 게이트 안내. daily-digest 는 vault/positioning.md 작성 시 활성. v0.2.0 의 PLUGIN_INSTALL/Hook 머지 그대로 유지. 본 plugin 은 외부 공개 발신을 하지 않는 로컬 전용 환경입니다."
 }
