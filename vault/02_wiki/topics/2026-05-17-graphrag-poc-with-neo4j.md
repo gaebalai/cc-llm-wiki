@@ -1,14 +1,14 @@
 ---
 id: 2026-05-17T174800-graphrag-poc-with-neo4j
 type: topic
-status: draft
+status: reviewed
 locale: ko
 sources:
   - vault/01_raw/articles/2026-05-17-2do-brain-neo4j-graphrag-poc.md
 related:
   - "[[entity-disambiguation-strategy]]"
   - "[[2do-brain-architecture]]"
-updated_at: 2026-05-17T17:48:00+09:00
+updated_at: 2026-05-17T18:50:00+09:00
 graph_synced_at: null
 ---
 

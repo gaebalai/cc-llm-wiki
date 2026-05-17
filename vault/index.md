@@ -14,16 +14,18 @@ LLM이 매번 전수 스캔하지 않도록 **JIT(Just-in-Time)** 진입점으�
 
 ### topics/
 
-(아직 비어 있음 — P1에서 첫 항목 추가)
+- [[2026-05-17-graphrag-poc-with-neo4j]] — Neo4j + 고정 Cypher 로 인과 경로(Company→Challenge→Solution→Technology) 추출·검증
+- [[2026-05-17-entity-disambiguation-strategy]] — canonical_name + aliases + Cypher 물리 검증 3 방어선으로 노드 분열 차단
+- [[2026-05-17-2do-brain-architecture]] — Claude Code × Obsidian × Neo4j 5 층 자율 지식 OS 청사진
 
 ### decisions/
 
-(아직 비어 있음 — P3 이후 ADR-001부터 시작)
+(아직 비어 있음 — 첫 ADR 작성 시 ADR-001 부터)
 
 ---
 
 ## Index 통계
 
-- topics 총 개수: 0
+- topics 총 개수: 3
 - decisions 총 개수: 0
-- 최종 갱신: 2026-05-17 (P0 스캐폴드)
+- 최종 갱신: 2026-05-17T18:50:00+09:00 (P3 클러스터 compile)

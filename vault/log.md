@@ -22,3 +22,7 @@
 - 2026-05-17T18:20:00+09:00 | [skill-create] | cc-session | compile Skill 신설: 7-step 승급 절차, lint 게이트, broken link 4가지 처리 패턴 | .claude/skills/compile/SKILL.md
 - 2026-05-17T18:20:00+09:00 | [dashboard] | cc-session | Dataview 상태 보드 신설 (6 쿼리: 상태 카운트·draft 목록·최근 7일·orphan·broken link·lint 리포트 인덱스) | vault/dashboards/status.md
 - 2026-05-17T18:20:00+09:00 | [claude-md] | cc-session | §4 Skill Index 상태 갱신 (P1·P2·P3 활성 표기) | CLAUDE.md
+- 2026-05-17T18:45:00+09:00 | [ingest] | cc-session | 약식 ingest (사용자 "진행" 승인) | docs/11 raw에서 entity-disambiguation-strategy draft 추출
+- 2026-05-17T18:45:00+09:00 | [ingest] | cc-session | 약식 ingest (사용자 "진행" 승인) | docs/11 raw에서 2do-brain-architecture draft 추출
+- 2026-05-17T18:50:00+09:00 | [compile] | cc-session | 클러스터 compile (SKILL 예외 패턴 1, 3건 동시) | _drafts/{graphrag-poc-with-neo4j,entity-disambiguation-strategy,2do-brain-architecture}.md -> topics/
+- 2026-05-17T18:50:00+09:00 | [index] | cc-session | index.md topics/ 섹션에 3건 등록, 통계 0→3 | vault/index.md
