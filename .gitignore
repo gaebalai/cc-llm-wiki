@@ -1,0 +1,47 @@
+# env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# build outputs
+dist/
+!dist/i18n/
+!dist/i18n/**/.gitkeep
+
+# Obsidian local state
+vault/.obsidian/workspace*
+vault/.obsidian/cache
+vault/.obsidian/plugins/*/data.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Claude Code local (settings.local.json은 글로벌 ~/.config/git/ignore 가 처리)
+.claude/queue/*
+!.claude/queue/.gitkeep
+plans/
+
+# infra runtime
+infra/neo4j/data/
+infra/neo4j/logs/
+infra/neo4j/plugins/*
+!infra/neo4j/plugins/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# node
+node_modules/
+
+# documents
+docs/*

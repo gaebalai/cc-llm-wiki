@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.anthropic.com/claude-code/settings.schema.json",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(rg:*)",
+      "Bash(find vault:*)",
+      "Bash(find .claude:*)",
+      "Bash(date:*)"
+    ],
+    "deny": [
+      "Bash(git push * main*)",
+      "Bash(git push * master*)",
+      "Bash(git push --force:*)",
+      "Bash(gh pr merge * --admin*)",
+      "Bash(rm -rf vault/01_raw/*)",
+      "Bash(rm -rf vault/01_raw)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const p=(j.tool_input&&(j.tool_input.file_path||j.tool_input.notebook_path))||'';if(/(^|\\/)vault\\/01_raw\\//.test(p)){console.error('[hook] vault/01_raw/ is Read-Only. See CLAUDE.md §2.');process.exit(2)}}catch(e){}})\""
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);const cmd=(j.tool_input&&j.tool_input.command)||'';if(/git\\s+push.*\\b(main|master)\\b/.test(cmd)||/gh\\s+pr\\s+merge.*--admin/.test(cmd)){console.error('[hook] main 직커밋/admin merge 차단. CLAUDE.md §3·§7.');process.exit(2)}}catch(e){}})\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'echo \"=== cc-llm-wiki ===\"; git status --short 2>/dev/null | head -20; echo; echo \"drafts: $(find vault/02_wiki/_drafts -name \\\"*.md\\\" 2>/dev/null | wc -l | tr -d \\\" \\\")\"; echo \"raw new (last 24h): $(find vault/01_raw -name \\\"*.md\\\" -mtime -1 2>/dev/null | wc -l | tr -d \\\" \\\")\"'"
+          }
+        ]
+      }
+    ]
+  }
+}
