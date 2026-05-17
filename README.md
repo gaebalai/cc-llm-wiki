@@ -66,11 +66,35 @@ cc-llm-wiki/
 - raw/ 직접 편집·자동 정리 (Hook 이 exit 2 로 차단)
 - Kagura MCP (P6 옵션 — 4주 자생 검증 후 결정)
 
-## 다음 단계
+## 설치
 
-1. Obsidian 에서 `vault/` 폴더를 Vault 로 열기
-2. `Settings → Files & Links → Excluded files` 에 `plans/` 추가
-3. `Settings → Community plugins` 에서 Dataview 설치 후 `vault/dashboards/status.md` 열기
-4. 실 동작 (선택):
-   - Neo4j: `cp .env.example .env` → `NEO4J_PASSWORD` 채우기 → `docker compose -f infra/neo4j/docker-compose.yml up -d` → `pip install neo4j`
-   - Slack 알림(선택): `.env` 에 `SLACK_WEBHOOK_URL` 추가, 안 채우면 자동 dry-run
+### 원스톱 (권장)
+
+```bash
+# 전체 7 단계 대화형 진행 (Obsidian → Dataview → .env → Docker Neo4j → Slack → weekly-review)
+bash scripts/install.sh
+
+# 또는 Claude Code 세션 안에서
+/install
+```
+
+옵션:
+- `bash scripts/install.sh --check` — 변경 없이 환경만 검사
+- `bash scripts/install.sh --step 4` — 특정 단계만 실행 (1~7)
+
+### 수동 설치
+
+원스톱 스크립트가 막히면 단계별로:
+
+1. Obsidian: `brew install --cask obsidian` → `vault/` 를 Vault 로 open
+2. Excluded files: `Settings → Files & Links` 에 `plans/`, `.claude/queue/` 추가
+3. Dataview: `Settings → Community plugins → Browse → Dataview → Install → Enable` → `vault/dashboards/status.md` 열기
+4. `.env`: `cp .env.example .env` → `NEO4J_PASSWORD` 채우기
+5. Neo4j: `brew install --cask docker` → Docker.app 켜기 → `docker compose -f infra/neo4j/docker-compose.yml up -d`
+6. Slack(선택): `.env` 에 `SLACK_WEBHOOK_URL` 추가, 미설정 시 자동 dry-run
+7. (선택) `pip install neo4j` 후 `DRY_RUN=0 python3 services/graph/ingest_graph.py --all --env .env`
+
+## Claude Code Plugin 으로 사용
+
+본 리포는 `.claude-plugin/plugin.json` 으로 plugin 메타데이터를 갖춥니다.
+다른 사람이 plugin marketplace 통해 설치하면 `/install` 명령으로 동일한 셋업 흐름이 자동 노출됩니다.

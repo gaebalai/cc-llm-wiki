@@ -38,3 +38,6 @@
 - 2026-05-17T21:00:00+09:00 | [routine] | cc-session | weekly-review routine 신설 (일 21:00 KST, 사람 회고 슬롯) | .claude/routines/weekly-review.md
 - 2026-05-17T21:00:00+09:00 | [hook] | cc-session | PostToolUse 에 graph 큐 적재 hook 추가 (topics/*.md Edit 시 .claude/queue/graph.txt append) — P5 보완 | .claude/settings.json
 - 2026-05-17T21:00:00+09:00 | [claude-md] | cc-session | §10 동기 경로 ✅ P6 active, §11 weekly-review 추가 | CLAUDE.md README.md
+- 2026-05-17T22:00:00+09:00 | [plugin] | cc-session | Claude Code plugin packaging: .claude-plugin/plugin.json manifest, /install 슬래시 명령 신설 | .claude-plugin/plugin.json .claude/commands/install.md
+- 2026-05-17T22:00:00+09:00 | [installer] | cc-session | scripts/install.sh 작성: 7 단계 (precheck/Obsidian/Dataview/Docker+Neo4j/.env/Slack/weekly-review), idempotent, --check 안전 모드, --step N 부분 실행 | scripts/install.sh
+- 2026-05-17T22:00:00+09:00 | [verify] | cc-session | install.sh --check 통과 (Docker daemon 만 미실행, 그 외 모두 OK) | -
