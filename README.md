@@ -17,7 +17,7 @@
 
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode.to-marketplace
+/plugin install cc-llm-wiki@claudecode-to-marketplace
 /install
 ```
 
@@ -111,8 +111,8 @@ cc-llm-wiki/
 
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki        # 추가 (1 회)
-/plugin install cc-llm-wiki@claudecode.to-marketplace              # 설치 (1 회)
-/plugin update cc-llm-wiki@claudecode.to-marketplace               # 업데이트
+/plugin install cc-llm-wiki@claudecode-to-marketplace              # 설치 (1 회)
+/plugin update cc-llm-wiki@claudecode-to-marketplace               # 업데이트
 ```
 
 설치 후 자동 활성화:

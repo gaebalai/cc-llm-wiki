@@ -121,7 +121,7 @@ Claude Code 세션 안에서:
 
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode.to-marketplace
+/plugin install cc-llm-wiki@claudecode-to-marketplace
 /install
 ```
 
@@ -314,7 +314,7 @@ cc-llm-wiki/
 
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@claudecode.to-marketplace
+/plugin install cc-llm-wiki@claudecode-to-marketplace
 /install
 ```
 
