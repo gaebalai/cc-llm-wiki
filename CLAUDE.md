@@ -171,11 +171,11 @@ graph_synced_at: null                   # graph-sync 성공 시 갱신
 **Routines** (`.claude/routines/`):
 | 이름 | cron(KST) | 상태 | 비고 |
 |---|---|---|---|
-| `wiki-ingest-sweep` | `0 * * * *` | TBD | 명세 미작성 |
+| `wiki-ingest-sweep` | `0 * * * *` | ✅ active (v0.3.9) | raw 신규 1 시간 감지, 알림만 (자동 ingest 금지) |
 | `weekly-lint` | `0 6 * * 0` | ✅ active | lint Skill 호출, Slack 통지 옵션 |
 | `weekly-review` | `0 21 * * 0` | ✅ active | 사람 회고 슬롯 (자동 처리 없음, 통계만 출력) |
-| `daily-digest` | `0 7 * * *` | ⏸ dry-run | Skill 본체 미작성 |
-| `sleep-maintenance` | `0 3 * * *` | TBD | graph-sync --queue 정기 호출 (P6 후속) |
+| `daily-digest` | `0 7 * * *` | ⏸ dry-run | Skill 본체 미작성 (positioning.md 의존) |
+| `sleep-maintenance` | `0 3 * * *` | ✅ active (v0.3.9) | graph-sync --queue + orphan_audit + aliases-candidates |
 | `morning-digest-recap` | `0 22 * * 1-5` | TBD | daily-digest 안정 후 |
 
 routine 명세는 `.claude/routines/<name>.md`. 실제 cron 등록은 별도 `/schedule create` 호출.

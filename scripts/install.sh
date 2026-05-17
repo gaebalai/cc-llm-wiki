@@ -440,6 +440,24 @@ step4_docker_neo4j() {
   fi
   ok "Docker daemon 실행 중"
 
+  # v0.3.9: 기존 컨테이너 비번 ↔ .env 비번 일치 검사
+  if docker ps --filter "name=cc-llm-wiki-neo4j" --format '{{.Names}}' 2>/dev/null | grep -q neo4j; then
+    info "기존 Neo4j 컨테이너 발견 — 비번 일치 검사"
+    local cont_pw env_pw
+    cont_pw=$(docker inspect cc-llm-wiki-neo4j --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null \
+      | grep '^NEO4J_AUTH=' | sed 's|NEO4J_AUTH=neo4j/||')
+    if [ -f "$TARGET_DIR/.env" ]; then
+      env_pw=$(grep '^NEO4J_PASSWORD=' "$TARGET_DIR/.env" | head -1 | cut -d= -f2-)
+    fi
+    if [ -n "$cont_pw" ] && [ -n "$env_pw" ] && [ "$cont_pw" != "$env_pw" ]; then
+      warn "비번 불일치 — 컨테이너=<masked> (\$NEO4J_AUTH) ↔ .env=<masked>"
+      info "  해결: sed -i '' 's|^NEO4J_PASSWORD=.*|NEO4J_PASSWORD=<container-pw>|' $TARGET_DIR/.env"
+      info "  (또는 컨테이너 reset: docker compose down -v 후 재기동 — 그래프 데이터 손실)"
+    elif [ -n "$cont_pw" ] && [ "$cont_pw" = "$env_pw" ]; then
+      ok "비번 일치 (컨테이너 ↔ .env)"
+    fi
+  fi
+
   local compose_file="$TARGET_DIR/infra/neo4j/docker-compose.yml"
   [ -f "$compose_file" ] || { fail "$compose_file 누락 (template 복사 안 됐을 수)"; return 1; }
 

@@ -6,7 +6,7 @@
 [![CI](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml/badge.svg)](https://github.com/gaebalai/cc-llm-wiki/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Plugin: Claude Code](https://img.shields.io/badge/Plugin-Claude_Code-blue)](https://github.com/gaebalai/cc-llm-wiki)
-[![Version](https://img.shields.io/badge/version-0.3.8-green)](https://github.com/gaebalai/cc-llm-wiki/releases)
+[![Version](https://img.shields.io/badge/version-0.3.9-green)](https://github.com/gaebalai/cc-llm-wiki/releases)
 
 ## 무엇
 
@@ -95,7 +95,7 @@ cc-llm-wiki/
 |---|---|---|
 | Skill | `ingest` · `lint` · `compile` · `query` · `graph-sync` · `morning-brief` · `evening-reflect` · `daily-digest` | **8 종** (v0.3.0+) |
 | Command | `/install` | 7+1 단계 원스톱 installer (PLUGIN_INSTALL 자동 감지) |
-| Routine | `weekly-lint` (일 06:00) · `weekly-review` (일 21:00) | KST cron |
+| Routine | `weekly-lint` (일 06:00) · `weekly-review` (일 21:00) · `wiki-ingest-sweep` (매시) · `sleep-maintenance` (매일 03:00) | KST cron, 4 active (v0.3.9) |
 | Hook | PreToolUse (raw·main 차단) · PostToolUse (graph 큐) · SessionStart · UserPromptSubmit · Stop | **5 종** (v0.3.0+) |
 | 인프라 | Neo4j 5.18.1 + APOC (Docker) | dry-run 가능, 실 검증 완료 (v0.3.1) |
 | 검색 | Cypher 템플릿 3 종 (causal_path / concept_neighbors / orphan_audit) | 고정 템플릿만 |

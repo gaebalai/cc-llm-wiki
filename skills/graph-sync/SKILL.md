@@ -77,21 +77,44 @@ upsert 후 `query_graph.py orphan_audit` 자동 실행 → 신규 orphan 노드�
 
 ## 사용 예
 
+### A. dev repo (subdir 모드)
+
 ```
 사용자: /graph-sync vault/02_wiki/topics/2026-05-17-graphrag-poc-with-neo4j.md
-Claude: [Step 1] 대상 1건, status=reviewed OK
-        [Step 2] dry-run: nodes=8 rels=10 (entity 추출 정상)
-        [Step 3] Neo4j .env OK
-        [Step 4] upsert 완료. 18 statements OK.
-        [Step 5] frontmatter graph_synced_at 갱신
-        [Step 6] orphan_audit: 0 신규 orphan. log 갱신.
-        ✓ 동기 성공.
+Claude: [Step 1~6] upsert 18 statements, orphan 0, log 갱신 → ✓
+```
 
+### B. 사용자 vault (flat 모드, plugin install — v0.3.8+)
+
+`ingest_graph.py` 가 외부 vault path 도 자동 허용 (REPO_ROOT 밖 OK).
+환경변수 override 로 인증·DRY_RUN 조정:
+
+```bash
+# 사용자 cwd 가 ~/my-knowledge-base 일 때
+DRY_RUN=0 python3 ~/Workspace2/cc-llm-wiki/services/graph/ingest_graph.py \
+  02_wiki/topics/<slug>.md \
+  --env .env
+
+# .env 의 NEO4J_PASSWORD 가 컨테이너 비번과 불일치면 override
+NEO4J_PASSWORD='<container-pw>' DRY_RUN=0 python3 ... 02_wiki/topics/<slug>.md --env .env
+```
+
+env 우선순위 (v0.3.8+): **환경변수 > .env**. 옛 .env 만 쓰던 동작과 호환.
+
+### C. 큐 일괄 처리
+
+```
 사용자: /graph-sync --queue
 Claude: [Step 1] 큐에 3건. status 검증 후 3건 모두 통과.
         ... (Step 2-6 반복)
         ✓ 3 path 동기. 큐 비움.
 ```
+
+### D. routine 자동 호출 (v0.3.9+)
+
+매일 03:00 KST 의 `sleep-maintenance` routine 이 `/graph-sync --queue` 자동 호출 + orphan_audit + aliases-candidates 발견.
+
+자세한 routine 명세: `.claude/routines/sleep-maintenance.md`
 
 ## 실패 시
 
