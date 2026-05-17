@@ -1,6 +1,6 @@
 {
   "name": "cc-llm-wiki",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "Claude Code 중심의 로컬 전용 LLM Wiki — 3층 격리(raw/wiki/schema) + Neo4j GraphRAG + Obsidian. Karpathy LLM Wiki 원전부터 GraphRAG PoC까지 통합한 풀스택 환경.",
   "author": {
     "name": "Jaewoo Kim",

@@ -50,7 +50,7 @@ allowed-tools:
 | 2 | `type` enum 위반 (topic/decision/self/digest 외) | ERROR | enum 매칭 |
 | 3 | `status` enum 위반 (draft/reviewed/published 외) | ERROR | enum 매칭 |
 | 4 | `sources` 빈 배열 (topic·digest만) | ERROR | 배열 길이 0 |
-| 5 | wikilink 끊김 (참조한 slug가 존재하지 않음) | ERROR | `[[...]]` 추출 후 파일 존재 확인 (단, `_drafts/`의 끊긴 링크는 **WARN-DRAFT** 로 강등 — 의도된 미작성일 수 있음) |
+| 5 | wikilink 끊김 (참조한 slug가 존재하지 않음) | ERROR | `[[<slug>]]` 또는 `[[<YYYY-MM-DD-slug>]]` (full stem) 추출 후 파일 존재 확인. 둘 다 매칭 허용 (Obsidian 표준). 단 `_drafts/`의 끊긴 링크는 **WARN-DRAFT** 로 강등 |
 | 6 | duplicate `id` (4층 공유 키 충돌) | ERROR | 전체 id 수집 후 중복 검사 |
 | 7 | wiki 슬러그 규칙 위반 (`vault/02_wiki/` 하위 `.md`) | ERROR | 파일명 regex `^[a-z0-9-]+\.md$` 검사 (단, `YYYY-MM-DD-` 접두는 권장) |
 | 8 | **raw 슬러그 권장 형식** (`vault/01_raw/` 또는 `01_raw/` 하위 `.md`) | **WARN-RAW** | 권장 regex `^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$`. 위반 시 알림만 (원문 보존 우선, Web Clipper 한글 자료 친화 — SCHEMA §3·§5) |

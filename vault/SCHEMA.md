@@ -36,7 +36,7 @@ graph_synced_at: null | <ISO8601>      # graph-sync 성공 시 갱신
 ## 3. 명명 규칙
 
 - **wiki 파일**: `YYYY-MM-DD-<kebab-slug>.md` 또는 `<kebab-slug>.md`. slug 는 **영문 소문자·숫자·하이픈만** (반각공백·콜론·슬래시 금지). wikilink 호환성을 위해 강제.
-- **wikilink**: `[[<exact-slug-without-extension>]]`. 띄어쓰기·대문자·이모지 금지.
+- **wikilink**: `[[<slug>]]` (짧은 형식, 권장) 또는 `[[<YYYY-MM-DD-slug>]]` (full stem, Obsidian 자동 생성). lint 가 둘 다 매칭. 띄어쓰기·대문자·이모지 금지.
 - **raw 파일**: `YYYY-MM-DD-<slug>.md` 권장. slug 는 영문이 권장이나 **한글·공백 허용** (Web Clipper 친화). 날짜 prefix 도 권장이지만 강제 아님. lint 가 위반 시 WARN-RAW (ERROR 아님).
 - **이유**: raw 는 외부 자료 보존이라 원문 제목 유지가 가치 있음. wiki 는 wikilink 호환성이 필수라 엄격.
 

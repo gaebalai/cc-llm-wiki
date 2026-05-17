@@ -93,6 +93,14 @@ jobs:
               print("  vault/ 없음 — skip (plugin packaging context)"); sys.exit(0)
           errs = 0; warns = 0
           seen_ids = {}
+          # wikilink slug 매핑: short slug 와 full stem 둘 다 (v0.3.10+)
+          slug_to_file = {}
+          for p in vault.rglob("*.md"):
+              if p.name.startswith("."): continue
+              slug_to_file[p.stem] = p     # full stem
+              m = re.match(r'^\d{4}-\d{2}-\d{2}-(.+)$', p.stem)
+              if m: slug_to_file[m.group(1)] = p   # short slug (날짜 prefix 제거)
+
           for p in vault.rglob("*.md"):
               ps = str(p)
               # raw 본문 검사 안 함 (SCHEMA §5 항목 8 = WARN-RAW 만), lint 리포트 디렉터리 제외
@@ -118,6 +126,15 @@ jobs:
               if iid:
                   if iid in seen_ids: print(f"  ✗ dup id: {iid}"); errs += 1
                   seen_ids[iid] = p
+              # wikilink stem/short 둘 다 매칭 (v0.3.10+, _drafts/ 는 WARN-DRAFT 강등)
+              is_draft = "_drafts" in ps
+              for m in re.finditer(r'\[\[([a-z0-9-]+)\]\]', text):
+                  link = m.group(1)
+                  if link not in slug_to_file:
+                      if is_draft:
+                          print(f"  ⚠ WARN-DRAFT: {p.name} → [[{link}]]"); warns += 1
+                      else:
+                          print(f"  ✗ broken wikilink: {p.name} → [[{link}]]"); errs += 1
           print(f"\nERROR: {errs} / WARN: {warns}")
           sys.exit(0 if errs == 0 else 1)
           PY
