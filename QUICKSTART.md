@@ -25,7 +25,7 @@
 
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@cc-llm-wiki
+/plugin install cc-llm-wiki@claudecode.to-marketplace
 ```
 
 → 4 Skills(`ingest`/`lint`/`compile`/`graph-sync`) + `/install` 명령이 자동 활성화.
@@ -257,7 +257,7 @@ docker compose -f infra/neo4j/docker-compose.yml logs neo4j --tail 50
 
 ### plugin 업데이트 받기
 ```
-/plugin update cc-llm-wiki@cc-llm-wiki
+/plugin update cc-llm-wiki@claudecode.to-marketplace
 ```
 
 ---

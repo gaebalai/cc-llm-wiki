@@ -59,7 +59,7 @@ claude
 세션 안에서:
 ```
 /plugin marketplace add gaebalai/cc-llm-wiki
-/plugin install cc-llm-wiki@cc-llm-wiki
+/plugin install cc-llm-wiki@claudecode.to-marketplace
 /install
 ```
 
@@ -82,7 +82,7 @@ git push origin main --tags
 
 사용자는:
 ```
-/plugin update cc-llm-wiki@cc-llm-wiki
+/plugin update cc-llm-wiki@claudecode.to-marketplace
 ```
 
 ## 5. marketplace 등록 (선택)
