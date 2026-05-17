@@ -92,12 +92,13 @@ cc-llm-wiki/
 
 | 영역 | 자산 | 비고 |
 |---|---|---|
-| Skill | `ingest` · `lint` · `compile` · `graph-sync` | 4 종, P1~P5 |
-| Command | `/install` | 7-단계 원스톱 installer |
+| Skill | `ingest` · `lint` · `compile` · `query` · `graph-sync` · `morning-brief` · `evening-reflect` · `daily-digest` | **8 종** (v0.3.0+) |
+| Command | `/install` | 7+1 단계 원스톱 installer (PLUGIN_INSTALL 자동 감지) |
 | Routine | `weekly-lint` (일 06:00) · `weekly-review` (일 21:00) | KST cron |
-| Hook | PreToolUse (raw 차단, main 차단) · PostToolUse (graph 큐) · SessionStart | |
-| 인프라 | Neo4j 5.18.1 + APOC (Docker) | dry-run 가능 |
+| Hook | PreToolUse (raw·main 차단) · PostToolUse (graph 큐) · SessionStart · UserPromptSubmit · Stop | **5 종** (v0.3.0+) |
+| 인프라 | Neo4j 5.18.1 + APOC (Docker) | dry-run 가능, 실 검증 완료 (v0.3.1) |
 | 검색 | Cypher 템플릿 3 종 (causal_path / concept_neighbors / orphan_audit) | 고정 템플릿만 |
+| vault 컨벤션 | **flat** (TARGET_DIR 자체) 또는 **subdir** (TARGET_DIR/vault) | v0.3.6+ 자동 감지 (Obsidian 친화 = flat 기본) |
 
 ## Phase 로드맵
 
@@ -107,10 +108,14 @@ cc-llm-wiki/
 | P1 | raw → wiki 토론 ingest | ✅ (3 topics) |
 | P2 | Context 가드 (lint 10 항목 + SCHEMA §5 명문화) | ✅ |
 | P3 | compile Skill + Dataview 보드 | ✅ |
-| P4 | weekly-lint routine + Slack 골격 | ✅ (daily-digest 본체 후속) |
+| P4 | weekly-lint routine + Slack 골격 | ✅ |
 | P5 | Neo4j GraphRAG PoC + PostToolUse 큐 hook | ✅ |
 | P6 | llm-wiki-origins + weekly-review | ✅ |
-| Plugin | marketplace.json + plugin.json + install.sh | ✅ |
+| Plugin v0.1.0 | marketplace.json + plugin.json + install.sh | ✅ |
+| Plugin v0.2.0 | PLUGIN_INSTALL 자동 감지 + Hook 머지 + 템플릿 복사 | ✅ |
+| Plugin v0.3.0 | 8 Skills 완성 (query·morning-brief·evening-reflect·daily-digest) + 2 hooks 신설 | ✅ |
+| Plugin v0.3.1~v0.3.5 | 실 Neo4j 검증 + plugin install validation 5 회 패치 | ✅ |
+| Plugin v0.3.6 | vault 평탄화 컨벤션 (flat) 지원 + raw 슬러그 한글 허용 | ✅ |
 
 설계 plan 전체: `~/.claude/plans/docs-11-twinkling-lemon.md`
 

@@ -308,6 +308,17 @@ cc-llm-wiki/
 
 ---
 
+## (후기) v0.3.x 운영 학습 — 정책의 진화
+
+작성 후 실 운영하면서 두 가지 정책 변경:
+
+1. **raw 슬러그 한글 허용** (v0.3.6): 처음엔 raw 도 영문 슬러그 강제 (`YYYY-MM-DD-<kebab>.md`). Web Clipper 로 한글 자료 클립 시 매번 rename 부담 → 정책 완화. raw 는 원문 보존 우선, wiki 만 wikilink 호환 위해 영문 강제.
+2. **vault 평탄화** (v0.3.6): 옛 `TARGET_DIR/vault/01_raw/` 구조 → Obsidian Web Clipper 의 vault URI 매칭이 폴더명 기준이라 충돌 발생. `TARGET_DIR` 자체가 vault 인 평탄화 모드 도입. install.sh 가 `.obsidian` 위치로 자동 감지.
+
+이런 게 헌법화 가치 있는 변화 — self/llm-wiki-origins.md 회고 메모에 누적된다.
+
+---
+
 ## 11. 가서 써보세요
 
 ```

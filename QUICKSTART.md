@@ -93,23 +93,30 @@ bash scripts/install.sh --step 4   # Docker 단계만 다시
 
 Obsidian Web Clipper 또는 직접 markdown 파일을 만들어 다음 위치에 저장:
 
+**flat 모드** (v0.3.6+ 기본, Obsidian 친화):
+```
+01_raw/articles/2026-05-17-<my-slug>.md
+```
+
+**subdir 모드** (옛 컨벤션 또는 dev repo):
 ```
 vault/01_raw/articles/2026-05-17-<my-slug>.md
 ```
 
-파일명 규칙 (SCHEMA §3):
-- `YYYY-MM-DD-<kebab-slug>.md`
-- 슬러그는 영문 소문자·숫자·하이픈만 (반각공백·한글·이모지 금지)
+파일명 규칙 (SCHEMA §3, v0.3.6+):
+- **wiki**: `<kebab-slug>.md` 강제 — 영문 소문자·숫자·하이픈만 (wikilink 호환성)
+- **raw**: `YYYY-MM-DD-<slug>.md` 권장. **한글·공백 허용** (Web Clipper 친화). 위반 시 lint WARN-RAW (ERROR 아님)
 
 장르 폴더는 6 가지: `articles` · `speeches` · `journals` · `podcasts` · `books` · `conversations`.
 
 ### 3-2. ingest — raw → draft
 
-Claude Code 세션에서:
+Claude Code 세션에서 (작업 디렉터리에서 `claude` 실행 후):
 
 ```
-/ingest vault/01_raw/articles/2026-05-17-<my-slug>.md
+/ingest 01_raw/articles/2026-05-17-<my-slug>.md
 ```
+(또는 한글 파일명도 OK: `/ingest 01_raw/articles/클립한자료.md`)
 
 `ingest` Skill 이 7 단계 토론을 시작합니다:
 

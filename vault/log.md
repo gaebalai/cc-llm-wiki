@@ -76,3 +76,4 @@
 - 2026-05-18T05:45:00+09:00 | [install-flatten] | cc-session | v0.3.6: install.sh VAULT_DIR + VAULT_MODE 자동 감지 (flat vs subdir). copy_templates vault 콘텐츠를 모드별 분기. step1/2/3/7 의 vault path 모두 $VAULT_DIR 사용. flat 모드 (TARGET_DIR/.obsidian 또는 01_raw 존재) 와 subdir 모드 (TARGET_DIR/vault/.obsidian 존재) 양쪽 시뮬 검증 OK | scripts/install.sh
 - 2026-05-18T05:45:00+09:00 | [claude-md] | cc-session | §2 권한 매트릭스 path 를 (vault/) 표기로 변경 (flat/subdir 모두 지원). 불변 원칙 본문 갱신 | CLAUDE.md
 - 2026-05-18T05:45:00+09:00 | [version] | cc-session | plugin.json/marketplace.json 0.3.5 → 0.3.6 | .claude-plugin/{plugin,marketplace}.json
+- 2026-05-18T06:00:00+09:00 | [docs-sync] | cc-session | README/QUICKSTART/blog 를 v0.3.x 변경 반영으로 갱신. README 활성 자산 표(8 Skills, 5 Hooks)·Phase 표(v0.1.0~v0.3.6) 갱신. QUICKSTART § 3-1 flat/subdir 모드 안내 + raw 한글 허용 표기. blog 후기 섹션 추가 (raw 슬러그 정책·평탄화 학습) | README.md QUICKSTART.md blog.md
